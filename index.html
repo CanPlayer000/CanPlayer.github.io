@@ -6,7 +6,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#000000">
 <link rel="manifest" href="./manifest.json">
-<title>ÃÔ¹¬ ¡¤ MAZE</title>
+<title>è¿·å®« Â· MAZE</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 html,body{
@@ -153,7 +153,7 @@ body.touch #moveStick{display:block;}
 }
 body.touch #turnArea{display:block;}
 #turnArea::before{
-  content:'?   ×ªÏò   ?';
+  content:'â—€   è½¬å‘   â–¶';
   position:absolute;
   top:50%;left:50%;
   transform:translate(-50%,-50%);
@@ -522,7 +522,7 @@ body.touch #rightActions{display:flex;}
   <div id="dots"></div>
 
   <div id="hint">
-    W ¡¤ S Ç°½ø / ºóÍË¡¡¡¡A ¡¤ D ×ªÏò¡¡¡¡M ±ê¼ÇÇ½Ãæ¡¡¡¡R ÖØÀ´
+    W Â· S å‰è¿› / åé€€ã€€ã€€A Â· D è½¬å‘ã€€ã€€M æ ‡è®°å¢™é¢ã€€ã€€R é‡æ¥
   </div>
 
   <div id="turnArea"></div>
@@ -534,22 +534,22 @@ body.touch #rightActions{display:flex;}
 
   <div id="moveStick">
     <div class="stick-knob"></div>
-    <div class="stick-label">ÒÆ¶¯</div>
+    <div class="stick-label">ç§»åŠ¨</div>
   </div>
 
   <div id="rightActions">
     <button class="action-btn" id="markBtn">
-      <span class="symbol">?</span>
-      <span class="label">±ê¼Ç</span>
+      <span class="symbol">âœ•</span>
+      <span class="label">æ ‡è®°</span>
     </button>
     <button class="action-btn" id="resetBtn">
-      <span class="symbol">?</span>
-      <span class="label">ÖØÀ´</span>
+      <span class="symbol">â†»</span>
+      <span class="label">é‡æ¥</span>
     </button>
   </div>
 
   <div id="bigText"></div>
-  <div id="markHint">ÒÑ ±ê ¼Ç</div>
+  <div id="markHint">å·² æ ‡ è®°</div>
 
   <div id="overlay">
     <div class="card" id="card"></div>
@@ -557,29 +557,29 @@ body.touch #rightActions{display:flex;}
 
   <div id="netPanel">
     <div class="net-inner">
-      <div class="net-title">Áª »ú Ä£ Ê½</div>
+      <div class="net-title">è” æœº æ¨¡ å¼</div>
 
       <div id="netMenu">
-        <button class="net-btn primary" id="btnCreateRoom">´´ ½¨ ·¿ ¼ä</button>
-        <div class="net-or">¡ª »ò ¡ª</div>
+        <button class="net-btn primary" id="btnCreateRoom">åˆ› å»º æˆ¿ é—´</button>
+        <div class="net-or">â€” æˆ– â€”</div>
         <div class="net-join-row">
-          <input id="roomInput" type="text" maxlength="6" placeholder="·¿¼äÂë" spellcheck="false" autocomplete="off">
-          <button class="net-btn" id="btnJoinRoom" style="width:auto;padding:11px 18px;">¼Ó Èë</button>
+          <input id="roomInput" type="text" maxlength="6" placeholder="æˆ¿é—´ç " spellcheck="false" autocomplete="off">
+          <button class="net-btn" id="btnJoinRoom" style="width:auto;padding:11px 18px;">åŠ  å…¥</button>
         </div>
         <div class="net-status" id="netMenuStatus"></div>
       </div>
 
       <div id="netRoom" style="display:none;">
         <div class="net-room-code">
-          ·¿¼äÂë <span id="roomCodeDisplay">------</span>
-          <button class="net-copy" id="btnCopyRoom">¸´ÖÆ</button>
+          æˆ¿é—´ç  <span id="roomCodeDisplay">------</span>
+          <button class="net-copy" id="btnCopyRoom">å¤åˆ¶</button>
         </div>
-        <div class="net-players-title">Íæ¼Ò (<span id="playerCount">1</span>)</div>
+        <div class="net-players-title">ç©å®¶ (<span id="playerCount">1</span>)</div>
         <div id="playerList" class="net-player-list"></div>
-        <button class="net-btn ghost" id="btnLeaveRoom">Àë ¿ª ·¿ ¼ä</button>
+        <button class="net-btn ghost" id="btnLeaveRoom">ç¦» å¼€ æˆ¿ é—´</button>
       </div>
 
-      <button class="net-close" id="btnNetClose">?</button>
+      <button class="net-close" id="btnNetClose">âœ•</button>
     </div>
   </div>
 </div>
@@ -598,13 +598,13 @@ if ('serviceWorker' in navigator) {
 }
 </script>
 
-<!-- ÓÎÏ·Ö÷½Å±¾ -->
+<!-- æ¸¸æˆä¸»è„šæœ¬ -->
 <script>
 (function(){
 'use strict';
 
 /* =========================================================
-   CloudBase ³õÊ¼»¯
+   CloudBase åˆå§‹åŒ–
    ========================================================= */
 const CLOUDBASE_ENV = 'migong-d5g0wqe3z8b11adc9';
 const CLOUDBASE_KEY = 'eyJhbGciOiJSUzI1NiIsImtpZCI6IjlkMWRjMzFlLWI0ZDAtNDQ4Yi1hNzZmLWIwY2M2M2Q4MTQ5OCJ9.eyJpc3MiOiJodHRwczovL21pZ29uZy1kNWcwd3FlM3o4YjExYWRjOS5hcC1zaGFuZ2hhaS50Y2ItYXBpLnRlbmNlbnRjbG91ZGFwaS5jb20iLCJzdWIiOiJhbm9uIiwiYXVkIjoibWlnb25nLWQ1ZzB3cWUzejhiMTFhZGM5IiwiZXhwIjo0MDk1MTM3MTYyLCJpYXQiOjE3OTE0NTM5NjIsIm5vbmNlIjoiMDlrNzd5V09Rak92VXJ1dEtyZzhnQSIsImF0X2hhc2giOiIwOWs3N3lXT1FqT3ZVcnV0S3JnOGdBIiwibmFtZSI6IkFub255bW91cyIsInNjb3BlIjoiYW5vbnltb3VzIiwicHJvamVjdF9pZCI6Im1pZ29uZy1kNWcwd3FlM3o4YjExYWRjOSIsIm1ldGEiOnsicGxhdGZvcm0iOiJQdWJsaXNoYWJsZUtleSJ9LCJ1c2VyX3R5cGUiOiIiLCJjbGllbnRfdHlwZSI6ImNsaWVudF91c2VyIiwiaXNfc3lzdGVtX2FkbWluIjpmYWxzZX0.a9hmwemOpwKILMbJcYwyzS9-jb9j9baGfUFdtUmeR0XS6VRVmVl_PJM5DH58x3ckpKUNBa_LV3Ow3OEZviiOqUrNCihcB4csgd6qelaOXEG5jU6pguxShAleZ_cN0Mk3oCTjG_LsM4KAAlVhsyCgBGtpihUWlOF3RfZsb9GjG6EQ8mqqXAhTIh_b2gZlp_Tla76VHsTc51w6_4zEoW4nkeQ8yt6K3_QH2PfVG-Y2rxpqZWH80YjiC1J2b5w7tT8MfVAeEgKItMsXMk7V3rI2dDIwvHRnKicpCJDviZ1_9Ruc3-7EiDy87v6JrUbDC2809j4MNsHY75CM1IGlZ8ywDw';
@@ -616,8 +616,8 @@ window.fbError = null;
 
 (function initCloudBase(){
   if (typeof cloudbase === 'undefined') {
-    window.fbError = 'CloudBase SDK Î´¼ÓÔØ£¬Çë¼ì²éÍøÂç';
-    console.warn('[Áª»ú] ' + window.fbError);
+    window.fbError = 'CloudBase SDK æœªåŠ è½½ï¼Œè¯·æ£€æŸ¥ç½‘ç»œ';
+    console.warn('[è”æœº] ' + window.fbError);
     window.dispatchEvent(new Event('fb-ready'));
     return;
   }
@@ -630,16 +630,16 @@ window.fbError = null;
     window.tcbApp = tcbApp;
     window.tcbDb = tcbDb;
     window.fbReady = true;
-    console.log('[Áª»ú] CloudBase ¾ÍĞ÷');
+    console.log('[è”æœº] CloudBase å°±ç»ª');
   } catch (err) {
-    window.fbError = 'CloudBase ³õÊ¼»¯Ê§°Ü: ' + (err.message || err);
-    console.warn('[Áª»ú] ' + window.fbError);
+    window.fbError = 'CloudBase åˆå§‹åŒ–å¤±è´¥: ' + (err.message || err);
+    console.warn('[è”æœº] ' + window.fbError);
   }
   window.dispatchEvent(new Event('fb-ready'));
 })();
 
 /* =========================================================
-   ¹¤¾ß
+   å·¥å…·
    ========================================================= */
 const TAU = Math.PI * 2;
 const clamp = (v,a,b) => v < a ? a : v > b ? b : v;
@@ -660,7 +660,7 @@ function fmtTime(sec) {
 }
 
 /* =========================================================
-   ÖÖ×ÓËæ»úÊı
+   ç§å­éšæœºæ•°
    ========================================================= */
 let rng = Math.random;
 let currentSeed = 0;
@@ -685,21 +685,21 @@ function resetRandom() {
 }
 
 /* =========================================================
-   ÄÑ¶ÈÅäÖÃ
+   éš¾åº¦é…ç½®
    ========================================================= */
 const DIFFICULTIES = {
   easy: {
-    label: '¼òµ¥', desc: 'ÖĞµÈÃÔ¹¬ ¡¤ ÒÆ¶¯¿ì',
+    label: 'ç®€å•', desc: 'ä¸­ç­‰è¿·å®« Â· ç§»åŠ¨å¿«',
     levels: [{ size: 15 }, { size: 19 }, { size: 23 }],
     moveSpeed: 2.1, turnSpeed: 2.5
   },
   normal: {
-    label: 'ÆÕÍ¨', desc: '´óÃÔ¹¬ ¡¤ ±ê×¼ËÙ¶È',
+    label: 'æ™®é€š', desc: 'å¤§è¿·å®« Â· æ ‡å‡†é€Ÿåº¦',
     levels: [{ size: 21 }, { size: 27 }, { size: 33 }],
     moveSpeed: 1.75, turnSpeed: 2.1
   },
   hard: {
-    label: 'À§ÄÑ', desc: '³¬´óÃÔ¹¬ ¡¤ ÒÆ¶¯Âı',
+    label: 'å›°éš¾', desc: 'è¶…å¤§è¿·å®« Â· ç§»åŠ¨æ…¢',
     levels: [{ size: 29 }, { size: 35 }, { size: 41 }],
     moveSpeed: 1.45, turnSpeed: 1.85
   }
@@ -719,7 +719,7 @@ function applyDifficulty(diff) {
 }
 
 /* =========================================================
-   »­²¼
+   ç”»å¸ƒ
    ========================================================= */
 const canvas = document.getElementById('game');
 const ctx = canvas.getContext('2d', { alpha: false });
@@ -739,7 +739,7 @@ window.addEventListener('orientationchange', () => setTimeout(resizeCanvas, 120)
 resizeCanvas();
 
 /* =========================================================
-   ÓÎÏ·×´Ì¬
+   æ¸¸æˆçŠ¶æ€
    ========================================================= */
 let map = [];
 let marks = new Set();
@@ -760,13 +760,13 @@ let bestTimes = [];
 const keys = { up: false, down: false, left: false, right: false };
 
 /* =========================================================
-   Áª»ú×´Ì¬
+   è”æœºçŠ¶æ€
    ========================================================= */
 const NET = {
   ready: false,
   roomId: null,
   myId: 'u_' + Math.random().toString(36).slice(2, 8),
-  myName: 'Íæ¼Ò' + Math.random().toString(36).slice(2, 5),
+  myName: 'ç©å®¶' + Math.random().toString(36).slice(2, 5),
   isHost: false,
   connected: false,
   lastSync: 0,
@@ -780,7 +780,7 @@ const otherPlayers = {};
 let roomHostId = null;
 
 /* =========================================================
-   ÃÔ¹¬Éú³É
+   è¿·å®«ç”Ÿæˆ
    ========================================================= */
 function generateMaze(size) {
   let w = size, h = size;
@@ -873,7 +873,7 @@ function loadLevel(idx) {
 }
 
 /* =========================================================
-   Åö×²
+   ç¢°æ’
    ========================================================= */
 function circleHitsWall(x, y, r) {
   const x0 = Math.floor(x - r), x1 = Math.floor(x + r);
@@ -900,7 +900,7 @@ function tryMove(dx, dy) {
 }
 
 /* =========================================================
-   ÉäÏßÍ¶Éä
+   å°„çº¿æŠ•å°„
    ========================================================= */
 let rayBuf = null;
 
@@ -980,7 +980,7 @@ function castRays() {
 }
 
 /* =========================================================
-   äÖÈ¾
+   æ¸²æŸ“
    ========================================================= */
 function render(rays) {
   const W = logicW, H = logicH, halfH = H * 0.5;
@@ -1214,7 +1214,7 @@ function renderOtherPlayers(rays) {
     if (op.done) {
       ctx.fillStyle = '#7fe7a0';
       ctx.font = 'bold ' + Math.max(12, spriteW * 0.4) + 'px "Courier New", monospace';
-      ctx.fillText('?', cx, cy + hh * 0.3);
+      ctx.fillText('âœ“', cx, cy + hh * 0.3);
     }
 
     ctx.globalAlpha = 1;
@@ -1222,7 +1222,7 @@ function renderOtherPlayers(rays) {
 }
 
 /* =========================================================
-   Íæ¼Ò¸üĞÂ
+   ç©å®¶æ›´æ–°
    ========================================================= */
 function updatePlayer(dt) {
   if (phase !== 'playing') return;
@@ -1277,7 +1277,7 @@ function updatePlayer(dt) {
 }
 
 /* =========================================================
-   ±ê¼ÇÏµÍ³
+   æ ‡è®°ç³»ç»Ÿ
    ========================================================= */
 function findAimedWall() {
   const rayDirX = Math.cos(player.angle);
@@ -1324,14 +1324,14 @@ function toggleMark() {
   if (marks.has(key)) {
     marks.delete(key);
     playBeep(500, 0.05, 0.04);
-    showMarkHint('È¡ Ïû ±ê ¼Ç');
+    showMarkHint('å– æ¶ˆ æ ‡ è®°');
   } else {
     marks.add(key);
     playBeep(1200, 0.05, 0.05);
-    showMarkHint('ÒÑ ±ê ¼Ç');
+    showMarkHint('å·² æ ‡ è®°');
   }
 
-  // ¡ï Áª»úÍ¬²½±ê¼Ç
+  // â˜… è”æœºåŒæ­¥æ ‡è®°
   syncMarks();
 
   const btn = document.getElementById('markBtn');
@@ -1350,7 +1350,7 @@ async function syncMarks() {
       data: { marks: marksObj }
     });
   } catch (err) {
-    console.warn('Í¬²½±ê¼ÇÊ§°Ü:', err);
+    console.warn('åŒæ­¥æ ‡è®°å¤±è´¥:', err);
   }
 }
 
@@ -1364,7 +1364,7 @@ function showMarkHint(text) {
 }
 
 /* =========================================================
-   ¹Ø¿¨Íê³É / µ¹¼ÆÊ± / ÒôĞ§
+   å…³å¡å®Œæˆ / å€’è®¡æ—¶ / éŸ³æ•ˆ
    ========================================================= */
 function onReachExit() {
   if (phase !== 'playing') return;
@@ -1372,7 +1372,7 @@ function onReachExit() {
   bestTimes[level] = Math.min(bestTimes[level] ?? Infinity, levelTime);
   playBeep(880, 0.08, 0.06);
 
-  // ¡ï Í¨Öª·şÎñÆ÷×Ô¼ºÍê³É
+  // â˜… é€šçŸ¥æœåŠ¡å™¨è‡ªå·±å®Œæˆ
   if (NET.connected && tcbDb && NET.roomId) {
     updateMyPlayer({ done: true });
   }
@@ -1390,7 +1390,7 @@ function onReachExit() {
         startCountdown();
       }, 1100);
     } else {
-      showBig('µÈ ´ı ¶Ó ÓÑ¡­', 1800);
+      showBig('ç­‰ å¾… é˜Ÿ å‹â€¦', 1800);
     }
   }
 }
@@ -1444,7 +1444,7 @@ function playBeep(freq, dur, vol) {
 }
 
 /* =========================================================
-   HUD / ´óÎÄ×Ö / ÕÚÕÖ
+   HUD / å¤§æ–‡å­— / é®ç½©
    ========================================================= */
 const hudLevelEl = document.getElementById('hudLevel');
 const hudTimeEl  = document.getElementById('hudTime');
@@ -1456,7 +1456,7 @@ function updateHUD() {
 function updateDots() {
   let s = '';
   for (let i = 0; i < LEVELS.length; i++) {
-    s += i <= level ? '¡ñ' : '¡ğ';
+    s += i <= level ? 'â—' : 'â—‹';
     if (i < LEVELS.length - 1) s += ' ';
   }
   dotsEl.innerHTML = s;
@@ -1532,19 +1532,19 @@ function showMenu() {
   let netLine = '';
   if (NET.connected) {
     netLine = `<div style="margin:10px 0;font-size:11px;color:#7fe7ff;letter-spacing:1.5px;">
-      ¡ñ ÒÑÁ¬½Ó·¿¼ä <b>${NET.roomId}</b> ¡¤ µÈ´ı·¿Ö÷¿ªÊ¼
+      â— å·²è¿æ¥æˆ¿é—´ <b>${NET.roomId}</b> Â· ç­‰å¾…æˆ¿ä¸»å¼€å§‹
     </div>`;
   }
 
   showOverlay(`
-    <div class="icon">?</div>
-    <h1>ÃÔ ¹¬</h1>
+    <div class="icon">â–¶</div>
+    <h1>è¿· å®«</h1>
     <p>
-      ÕÒµ½ÉÁË¸µÄ³ö¿Ú±ê¼Ç<br>
-      ´©¹ı <span class="hl">${LEVELS.length} ²ã</span> ÃÔ¹¬µÖ´ïÖÕµã
+      æ‰¾åˆ°é—ªçƒçš„å‡ºå£æ ‡è®°<br>
+      ç©¿è¿‡ <span class="hl">${LEVELS.length} å±‚</span> è¿·å®«æŠµè¾¾ç»ˆç‚¹
     </p>
 
-    <div class="diff-title">Ñ¡ Ôñ ÄÑ ¶È</div>
+    <div class="diff-title">é€‰ æ‹© éš¾ åº¦</div>
     <div class="diff-select">
       ${diffButtons}
     </div>
@@ -1552,12 +1552,12 @@ function showMenu() {
 
     ${netLine}
 
-    <button class="btn ghost" id="btnNetOpen" style="margin-bottom:10px;">Áª »ú Ä£ Ê½</button>
-    <button class="btn" id="btnStart">¿ª Ê¼</button>
+    <button class="btn ghost" id="btnNetOpen" style="margin-bottom:10px;">è” æœº æ¨¡ å¼</button>
+    <button class="btn" id="btnStart">å¼€ å§‹</button>
 
     <div style="margin-top:16px;font-size:10px;color:#555;letter-spacing:2px;line-height:1.9;">
-      <div>¼üÅÌ£ºW/S Ç°ºó ¡¤ A/D ×ªÏò ¡¤ M ±ê¼Ç</div>
-      <div style="margin-top:6px;color:#444;">´¥ÆÁ£º×óÒ¡¸ËÒÆ¶¯ ¡¤ ÓÒ°ëÆÁ»¬ÆÁ×ªÏò</div>
+      <div>é”®ç›˜ï¼šW/S å‰å Â· A/D è½¬å‘ Â· M æ ‡è®°</div>
+      <div style="margin-top:6px;color:#444;">è§¦å±ï¼šå·¦æ‘‡æ†ç§»åŠ¨ Â· å³åŠå±æ»‘å±è½¬å‘</div>
     </div>
   `);
 }
@@ -1582,30 +1582,30 @@ function showAllClear() {
   for (let i = 0; i < LEVELS.length; i++) {
     rows += `
       <div class="stat">
-        <div class="k">µÚ ${i + 1} ¹Ø</div>
+        <div class="k">ç¬¬ ${i + 1} å…³</div>
         <div class="v">${fmtTime(bestTimes[i] ?? 0)}</div>
       </div>
     `;
   }
 
   showOverlay(`
-    <div class="icon">¡ï</div>
-    <h1>È« ²¿ Í¨ ¹Ø</h1>
-    <p>ÄÑ¶È£º<span class="hl">${DIFFICULTIES[currentDiff].label}</span></p>
+    <div class="icon">â˜…</div>
+    <h1>å…¨ éƒ¨ é€š å…³</h1>
+    <p>éš¾åº¦ï¼š<span class="hl">${DIFFICULTIES[currentDiff].label}</span></p>
     <div class="stats">${rows}</div>
     <div class="stats one">
       <div class="stat">
-        <div class="k">×ÜÊ±¼ä</div>
+        <div class="k">æ€»æ—¶é—´</div>
         <div class="v">${fmtTime(totalTime)}</div>
       </div>
     </div>
-    <button class="btn" id="btnAgain">ÔÙ À´ Ò» ´Î</button>
-    <button class="btn ghost" id="btnMenu">·µ»Ø±êÌâ</button>
+    <button class="btn" id="btnAgain">å† æ¥ ä¸€ æ¬¡</button>
+    <button class="btn ghost" id="btnMenu">è¿”å›æ ‡é¢˜</button>
   `);
 }
 
 /* =========================================================
-   ¼üÅÌ
+   é”®ç›˜
    ========================================================= */
 function handleKey(e, isDown) {
   const k = e.key.toLowerCase();
@@ -1631,7 +1631,7 @@ window.addEventListener('blur', () => {
 });
 
 /* =========================================================
-   ÒÆ¶¯Ò¡¸Ë
+   ç§»åŠ¨æ‘‡æ†
    ========================================================= */
 class MoveStick {
   constructor(baseEl) {
@@ -1721,7 +1721,7 @@ class MoveStick {
 }
 
 /* =========================================================
-   ×ªÏòÇøÓò
+   è½¬å‘åŒºåŸŸ
    ========================================================= */
 class TurnArea {
   constructor(el, indicatorFill) {
@@ -1800,7 +1800,7 @@ const turnArea  = new TurnArea(
 );
 
 /* =========================================================
-   ±ê¼Ç / ÖØÀ´ °´Å¥
+   æ ‡è®° / é‡æ¥ æŒ‰é’®
    ========================================================= */
 const markBtn = document.getElementById('markBtn');
 if (markBtn) {
@@ -1835,7 +1835,7 @@ document.addEventListener('gesturestart', e => e.preventDefault());
 document.addEventListener('dblclick', e => e.preventDefault(), { passive: false });
 
 /* =========================================================
-   Áª»úÂß¼­ ¡ª¡ª CloudBase °æ±¾
+   è”æœºé€»è¾‘ â€”â€” CloudBase ç‰ˆæœ¬
    ========================================================= */
 const netPanel = document.getElementById('netPanel');
 const netMenu  = document.getElementById('netMenu');
@@ -1855,7 +1855,7 @@ function openNetPanel() {
   setNetStatus('');
 
   if (!window.fbReady) {
-    setNetStatus('ÕıÔÚ¼ÓÔØÁª»ú·şÎñ¡­');
+    setNetStatus('æ­£åœ¨åŠ è½½è”æœºæœåŠ¡â€¦');
   } else if (window.fbError) {
     setNetStatus(window.fbError, 'err');
     document.getElementById('btnCreateRoom').disabled = true;
@@ -1889,11 +1889,11 @@ function genRoomCode() {
 
 async function createRoom() {
   if (!window.fbReady || !tcbDb) {
-    setNetStatus('Áª»ú·şÎñÎ´¾ÍĞ÷', 'err');
+    setNetStatus('è”æœºæœåŠ¡æœªå°±ç»ª', 'err');
     return;
   }
 
-  setNetStatus('ÕıÔÚ´´½¨·¿¼ä¡­');
+  setNetStatus('æ­£åœ¨åˆ›å»ºæˆ¿é—´â€¦');
   const roomId = genRoomCode();
   const seed = Math.floor(Math.random() * 1e9);
 
@@ -1908,7 +1908,7 @@ async function createRoom() {
         players: {
           [NET.myId]: {
             x: 1.5, y: 1.5, angle: 0, done: false,
-            name: '·¿Ö÷',
+            name: 'æˆ¿ä¸»',
             lastUpdate: Date.now()
           }
         },
@@ -1925,33 +1925,33 @@ async function createRoom() {
     enterRoomUI();
     attachRoomListener();
 
-    setNetStatus('·¿¼äÒÑ´´½¨', 'ok');
+    setNetStatus('æˆ¿é—´å·²åˆ›å»º', 'ok');
   } catch (err) {
     console.error(err);
-    setNetStatus('´´½¨Ê§°Ü£º' + (err.message || err), 'err');
+    setNetStatus('åˆ›å»ºå¤±è´¥ï¼š' + (err.message || err), 'err');
   }
 }
 
 async function joinRoom(code) {
   if (!window.fbReady || !tcbDb) {
-    setNetStatus('Áª»ú·şÎñÎ´¾ÍĞ÷', 'err');
+    setNetStatus('è”æœºæœåŠ¡æœªå°±ç»ª', 'err');
     return;
   }
 
   code = (code || '').trim().toUpperCase();
-  if (code.length !== 6) { setNetStatus('·¿¼äÂë±ØĞëÊÇ 6 Î»', 'err'); return; }
+  if (code.length !== 6) { setNetStatus('æˆ¿é—´ç å¿…é¡»æ˜¯ 6 ä½', 'err'); return; }
 
-  setNetStatus('ÕıÔÚ¼ÓÈë¡­');
+  setNetStatus('æ­£åœ¨åŠ å…¥â€¦');
 
   try {
     const res = await tcbDb.collection('rooms').doc(code).get();
     if (!res.data || res.data.length === 0) {
-      setNetStatus('·¿¼ä²»´æÔÚ', 'err');
+      setNetStatus('æˆ¿é—´ä¸å­˜åœ¨', 'err');
       return;
     }
     const data = res.data[0];
 
-    // °Ñ×Ô¼º¼ÓÈë players
+    // æŠŠè‡ªå·±åŠ å…¥ players
     const players = data.players || {};
     players[NET.myId] = {
       x: 1.5, y: 1.5, angle: 0, done: false,
@@ -1973,15 +1973,15 @@ async function joinRoom(code) {
     enterRoomUI();
     attachRoomListener();
 
-    setNetStatus('ÒÑ¼ÓÈë·¿¼ä', 'ok');
+    setNetStatus('å·²åŠ å…¥æˆ¿é—´', 'ok');
   } catch (err) {
     console.error(err);
-    setNetStatus('¼ÓÈëÊ§°Ü£º' + (err.message || err), 'err');
+    setNetStatus('åŠ å…¥å¤±è´¥ï¼š' + (err.message || err), 'err');
   }
 }
 
 async function leaveRoom() {
-  // ´Ó·¿¼äÒÆ³ı×Ô¼º
+  // ä»æˆ¿é—´ç§»é™¤è‡ªå·±
   if (NET.connected && tcbDb && NET.roomId) {
     try {
       const res = await tcbDb.collection('rooms').doc(NET.roomId).get();
@@ -1989,7 +1989,7 @@ async function leaveRoom() {
         const players = res.data[0].players || {};
         delete players[NET.myId];
 
-        // Èç¹ûÊÇ·¿Ö÷ÇÒ·¿¼äÃ»ÈËÁË£¬Ö±½ÓÉ¾³ı·¿¼ä
+        // å¦‚æœæ˜¯æˆ¿ä¸»ä¸”æˆ¿é—´æ²¡äººäº†ï¼Œç›´æ¥åˆ é™¤æˆ¿é—´
         if (NET.isHost && Object.keys(players).length === 0) {
           await tcbDb.collection('rooms').doc(NET.roomId).remove();
         } else {
@@ -1998,7 +1998,7 @@ async function leaveRoom() {
           });
         }
       }
-    } catch(e) { console.warn('Àë¿ª·¿¼ä³ö´í:', e); }
+    } catch(e) { console.warn('ç¦»å¼€æˆ¿é—´å‡ºé”™:', e); }
   }
 
   detachRoomListener();
@@ -2030,18 +2030,18 @@ function updatePlayerListUI() {
   let html = '';
   for (const id of ids) {
     const isMe = id === NET.myId;
-    const name = isMe ? 'ÎÒ' : (otherPlayers[id] ? otherPlayers[id].name : 'Íæ¼Ò');
+    const name = isMe ? 'æˆ‘' : (otherPlayers[id] ? otherPlayers[id].name : 'ç©å®¶');
     const isHost = id === roomHostId;
     html += '<div class="net-player">' +
       '<span class="' + (isMe ? 'me' : '') + '">' + name + '</span>' +
-      (isHost ? '<span class="host">·¿Ö÷</span>' : '') +
+      (isHost ? '<span class="host">æˆ¿ä¸»</span>' : '') +
     '</div>';
   }
   playerListEl.innerHTML = html;
 }
 
 /* =========================================================
-   ¼àÌı·¿¼ä±ä»¯£¨CloudBase watch£©
+   ç›‘å¬æˆ¿é—´å˜åŒ–ï¼ˆCloudBase watchï¼‰
    ========================================================= */
 function attachRoomListener() {
   detachRoomListener();
@@ -2055,13 +2055,13 @@ function attachRoomListener() {
         handleRoomUpdate(data);
       },
       onError: (err) => {
-        console.warn('·¿¼ä¼àÌı³ö´í:', err);
-        setNetStatus('Á¬½ÓÖĞ¶Ï£¬ÇëÖØÊÔ', 'err');
+        console.warn('æˆ¿é—´ç›‘å¬å‡ºé”™:', err);
+        setNetStatus('è¿æ¥ä¸­æ–­ï¼Œè¯·é‡è¯•', 'err');
       }
     });
   } catch (err) {
-    console.warn('ÎŞ·¨¼àÌı·¿¼ä:', err);
-    setNetStatus('¼àÌıÊ§°Ü£º' + (err.message || err), 'err');
+    console.warn('æ— æ³•ç›‘å¬æˆ¿é—´:', err);
+    setNetStatus('ç›‘å¬å¤±è´¥ï¼š' + (err.message || err), 'err');
   }
 }
 
@@ -2075,14 +2075,14 @@ function detachRoomListener() {
 function handleRoomUpdate(data) {
   roomHostId = data.hostId;
 
-  // ---- Í¬²½±ê¼Ç ----
+  // ---- åŒæ­¥æ ‡è®° ----
   const remoteMarks = data.marks || {};
   if (JSON.stringify(remoteMarks) !== JSON.stringify(NET.marksSnapshot)) {
     marks = new Set(Object.keys(remoteMarks));
     NET.marksSnapshot = remoteMarks;
   }
 
-  // ---- Í¬²½ÆäËûÍæ¼Ò ----
+  // ---- åŒæ­¥å…¶ä»–ç©å®¶ ----
   const ps = data.players || {};
   for (const pid in ps) {
     if (pid === NET.myId) continue;
@@ -2103,18 +2103,18 @@ function handleRoomUpdate(data) {
   NET.playersSnapshot = ps;
   updatePlayerListUI();
 
-  // ---- ·Ç·¿Ö÷£ºÍ¬²½ÓÎÏ·½×¶Î ----
+  // ---- éæˆ¿ä¸»ï¼šåŒæ­¥æ¸¸æˆé˜¶æ®µ ----
   if (!NET.isHost && data.phase && data.phase !== phase) {
     handleRemotePhase(data.phase, data.level);
   }
 
-  // ---- ·Ç·¿Ö÷£ºÍ¬²½ÄÑ¶È£¨·ÀÖ¹ºó½øÀ´Ê±²»Ò»ÖÂ£©----
+  // ---- éæˆ¿ä¸»ï¼šåŒæ­¥éš¾åº¦ï¼ˆé˜²æ­¢åè¿›æ¥æ—¶ä¸ä¸€è‡´ï¼‰----
   if (!NET.isHost && data.difficulty && data.difficulty !== currentDiff) {
     applyDifficulty(data.difficulty);
     if (data.seed && data.seed !== currentSeed) setSeed(data.seed);
   }
 
-  // ---- ·¿Ö÷£º¼ì²éËùÓĞÈËÊÇ·ñÒÑµ½´ï³ö¿Ú ----
+  // ---- æˆ¿ä¸»ï¼šæ£€æŸ¥æ‰€æœ‰äººæ˜¯å¦å·²åˆ°è¾¾å‡ºå£ ----
   if (NET.isHost && phase === 'playing') {
     const arr = Object.values(ps);
     if (arr.length > 1 && arr.every(p => p.done)) {
@@ -2129,7 +2129,7 @@ function handleRemotePhase(newPhase, newLevel) {
     hideOverlay();
     startCountdown();
   } else if (newPhase === 'levelClear' && phase !== 'levelClear') {
-    showBig('¶Ó ÓÑ ÒÑ µ½ ´ï', 1200);
+    showBig('é˜Ÿ å‹ å·² åˆ° è¾¾', 1200);
   } else if (newPhase === 'allClear' && phase !== 'allClear') {
     phase = 'allClear';
     showAllClear();
@@ -2137,7 +2137,7 @@ function handleRemotePhase(newPhase, newLevel) {
 }
 
 /* =========================================================
-   ·¿Ö÷ÍÆ½ø¹Ø¿¨
+   æˆ¿ä¸»æ¨è¿›å…³å¡
    ========================================================= */
 async function hostNextLevel() {
   if (!NET.isHost || !tcbDb || !NET.roomId) return;
@@ -2172,14 +2172,14 @@ async function hostNextLevel() {
 }
 
 /* =========================================================
-   CloudBase ·¿¼äÊôĞÔ / Íæ¼ÒÊôĞÔ¸üĞÂ
+   CloudBase æˆ¿é—´å±æ€§ / ç©å®¶å±æ€§æ›´æ–°
    ========================================================= */
 async function updateRoomMeta(patch) {
   if (!tcbDb || !NET.roomId) return;
   try {
     await tcbDb.collection('rooms').doc(NET.roomId).update({ data: patch });
   } catch (err) {
-    console.warn('¸üĞÂ·¿¼äÔªÊı¾İÊ§°Ü:', err);
+    console.warn('æ›´æ–°æˆ¿é—´å…ƒæ•°æ®å¤±è´¥:', err);
   }
 }
 
@@ -2194,12 +2194,12 @@ async function updateMyPlayer(patch) {
       data: { players }
     });
   } catch (err) {
-    console.warn('¸üĞÂÍæ¼ÒÊı¾İÊ§°Ü:', err);
+    console.warn('æ›´æ–°ç©å®¶æ•°æ®å¤±è´¥:', err);
   }
 }
 
 /* =========================================================
-   Î»ÖÃÍ¬²½
+   ä½ç½®åŒæ­¥
    ========================================================= */
 function syncMyPosition(ts) {
   if (!NET.connected || !tcbDb || !NET.roomId) return;
@@ -2207,14 +2207,14 @@ function syncMyPosition(ts) {
   if (ts - NET.lastSync < NET.syncInterval) return;
   NET.lastSync = ts;
 
-  // ÓÃÄÚ´æÖĞµÄ players ¿ìÕÕ¸üĞÂ×Ô¼ºµÄÎ»ÖÃ£¬¼õÉÙÒ»´Î¶ÁÈ¡
+  // ç”¨å†…å­˜ä¸­çš„ players å¿«ç…§æ›´æ–°è‡ªå·±çš„ä½ç½®ï¼Œå‡å°‘ä¸€æ¬¡è¯»å–
   const players = NET.playersSnapshot || {};
   players[NET.myId] = {
     x: player.x,
     y: player.y,
     angle: player.angle,
     done: (phase === 'levelClear' || phase === 'allClear'),
-    name: NET.isHost ? '·¿Ö÷' : NET.myName,
+    name: NET.isHost ? 'æˆ¿ä¸»' : NET.myName,
     lastUpdate: Date.now()
   };
 
@@ -2242,7 +2242,7 @@ function smoothOtherPlayers(dt) {
 }
 
 /* =========================================================
-   °ó¶¨Áª»ú UI
+   ç»‘å®šè”æœº UI
    ========================================================= */
 document.getElementById('btnCreateRoom').addEventListener('click', createRoom);
 document.getElementById('btnJoinRoom').addEventListener('click', () => {
@@ -2253,9 +2253,9 @@ document.getElementById('btnNetClose').addEventListener('click', closeNetPanel);
 document.getElementById('btnCopyRoom').addEventListener('click', async () => {
   try {
     await navigator.clipboard.writeText(NET.roomId);
-    setNetStatus('·¿¼äÂëÒÑ¸´ÖÆ', 'ok');
+    setNetStatus('æˆ¿é—´ç å·²å¤åˆ¶', 'ok');
   } catch(e) {
-    setNetStatus('·¿¼äÂë£º' + NET.roomId, 'ok');
+    setNetStatus('æˆ¿é—´ç ï¼š' + NET.roomId, 'ok');
   }
 });
 document.getElementById('roomInput').addEventListener('input', e => {
@@ -2263,7 +2263,7 @@ document.getElementById('roomInput').addEventListener('input', e => {
 });
 
 /* =========================================================
-   Ö÷Ñ­»·
+   ä¸»å¾ªç¯
    ========================================================= */
 let lastTs = 0;
 
@@ -2293,7 +2293,7 @@ function loop(ts) {
 }
 
 /* =========================================================
-   Æô¶¯
+   å¯åŠ¨
    ========================================================= */
 resizeCanvas();
 showMenu();
@@ -2302,16 +2302,16 @@ requestAnimationFrame(loop);
 window.addEventListener('fb-ready', () => {
   if (window.fbReady) {
     NET.ready = true;
-    console.log('[Áª»ú] ¾ÍĞ÷£¬myId =', NET.myId);
+    console.log('[è”æœº] å°±ç»ªï¼ŒmyId =', NET.myId);
   } else {
-    console.warn('[Áª»ú] Î´¾ÍĞ÷£º' + window.fbError);
+    console.warn('[è”æœº] æœªå°±ç»ªï¼š' + window.fbError);
   }
 });
 
 window.addEventListener('beforeunload', () => {
   if (NET.connected && tcbDb && NET.roomId && !NET.isHost) {
     try {
-      // ¾¡Á¦ÇåÀí£¨Í¬²½²Ù×÷¿ÉÄÜÎŞ·¨Íê³É£¬ÓÃ sendBeacon ²»ĞĞ£¬½ö×÷³¢ÊÔ£©
+      // å°½åŠ›æ¸…ç†ï¼ˆåŒæ­¥æ“ä½œå¯èƒ½æ— æ³•å®Œæˆï¼Œç”¨ sendBeacon ä¸è¡Œï¼Œä»…ä½œå°è¯•ï¼‰
       tcbDb.collection('rooms').doc(NET.roomId).get().then(res => {
         if (res.data && res.data.length) {
           const players = res.data[0].players || {};
