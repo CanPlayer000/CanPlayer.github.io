@@ -1,5 +1,5 @@
 // sw.js
-const CACHE_VERSION = 'v1.0.0'; // ★ 每次更新网页后，修改这个版本号
+const CACHE_VERSION = 'v1.0.1'; // ★ 每次更新网页后，修改这个版本号
 const CACHE_NAME = `maze-game-${CACHE_VERSION}`;
 
 // 需要缓存的资源列表（全部用相对路径）

@@ -6,7 +6,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#000000">
 <link rel="manifest" href="./manifest.json">
-<title>è¿·å®« Â· MAZE</title>
+<title>ÃÔ¹¬ ¡¤ MAZE</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 html,body{
@@ -90,9 +90,6 @@ body.touch #scanlines{opacity:0.5;}
 }
 body.touch #hint{display:none;}
 
-/* =========================================================
-   ç§»åŠ¨æ‘‡æ†ï¼ˆå·¦ä¸‹ï¼Œç±»å’Œå¹³ç²¾è‹±ï¼‰
-   ========================================================= */
 #moveStick{
   display:none;
   position:absolute;
@@ -113,8 +110,6 @@ body.touch #moveStick{display:block;}
   background:rgba(255,255,255,0.07);
   border-color:rgba(255,255,255,0.42);
 }
-
-/* åå­—å‡†çº¿ */
 #moveStick::before,
 #moveStick::after{
   content:'';position:absolute;
@@ -126,7 +121,6 @@ body.touch #moveStick{display:block;}
 #moveStick::after{
   top:18%;bottom:18%;left:50%;width:1px;transform:translateX(-50%);
 }
-
 .stick-knob{
   position:absolute;left:50%;top:50%;
   width:56px;height:56px;border-radius:50%;
@@ -141,22 +135,16 @@ body.touch #moveStick{display:block;}
   background:#fff;
   box-shadow:0 0 26px rgba(255,255,255,0.7);
 }
-
 #moveStick .stick-label{
   position:absolute;bottom:-18px;left:0;right:0;
   text-align:center;font-size:9px;letter-spacing:2px;
   color:rgba(255,255,255,0.32);font-weight:700;pointer-events:none;
 }
 
-/* =========================================================
-   è½¬å‘åŒºåŸŸï¼ˆå³åŠå±ï¼Œç±»å’Œå¹³ç²¾è‹±æ»‘å±è½¬å‘ï¼‰
-   ========================================================= */
 #turnArea{
   display:none;
   position:absolute;
-  right:0;
-  top:0;
-  bottom:0;
+  right:0;top:0;bottom:0;
   width:50%;
   z-index:15;
   touch-action:none;
@@ -164,17 +152,12 @@ body.touch #moveStick{display:block;}
   pointer-events:auto;
 }
 body.touch #turnArea{display:block;}
-
-/* è½¬å‘æ¿€æ´»æ—¶çš„è§†è§‰æç¤º */
 #turnArea::before{
-  content:'â—€   è½¬å‘   â–¶';
+  content:'?   ×ªÏò   ?';
   position:absolute;
-  top:50%;
-  left:50%;
+  top:50%;left:50%;
   transform:translate(-50%,-50%);
-  font-size:11px;
-  letter-spacing:4px;
-  font-weight:700;
+  font-size:11px;letter-spacing:4px;font-weight:700;
   color:rgba(255,255,255,0.0);
   pointer-events:none;
   transition:color .2s;
@@ -187,15 +170,13 @@ body.touch #turnArea{display:block;}
   text-shadow:0 0 14px rgba(140,220,255,0.6);
 }
 
-/* è½¬å‘æ–¹å‘æŒ‡ç¤ºæ¡ */
 #turnIndicator{
   display:none;
   position:absolute;
   left:50%;
   bottom:calc(env(safe-area-inset-bottom,0px) + 200px);
   transform:translateX(-50%);
-  width:120px;
-  height:4px;
+  width:120px;height:4px;
   background:rgba(255,255,255,0.1);
   border-radius:2px;
   z-index:22;
@@ -204,25 +185,17 @@ body.touch #turnArea{display:block;}
 }
 body.touch #turnIndicator{display:block;}
 #turnIndicator .fill{
-  position:absolute;
-  top:0;bottom:0;
-  left:50%;
-  width:0%;
+  position:absolute;top:0;bottom:0;left:50%;width:0%;
   background:linear-gradient(90deg,rgba(140,220,255,0.9),#fff);
   border-radius:2px;
   transition:width .08s linear,left .08s linear,background .1s;
 }
 #turnIndicator .center{
-  position:absolute;
-  left:50%;top:-3px;bottom:-3px;
-  width:1px;
+  position:absolute;left:50%;top:-3px;bottom:-3px;width:1px;
   background:rgba(255,255,255,0.4);
   transform:translateX(-50%);
 }
 
-/* =========================================================
-   å³ä¾§æŒ‰é’®ï¼ˆåœ¨è½¬å‘åŒºåŸŸä¹‹ä¸Šï¼‰
-   ========================================================= */
 #rightActions{
   display:none;
   position:absolute;
@@ -260,9 +233,6 @@ body.touch #rightActions{display:flex;}
 .action-btn .symbol{font-size:20px;line-height:1;font-weight:900;}
 .action-btn .label{font-size:9px;font-weight:800;letter-spacing:1px;line-height:1;}
 
-/* =========================================================
-   é®ç½©
-   ========================================================= */
 #overlay{
   position:absolute;inset:0;z-index:50;
   display:flex;align-items:center;justify-content:center;
@@ -371,9 +341,104 @@ body.touch #rightActions{display:flex;}
 }
 #markHint.show{opacity:1;}
 
-/* =========================================================
-   æ¨ªå±ä¼˜åŒ–
-   ========================================================= */
+#netPanel{
+  display:none;
+  position:absolute;inset:0;z-index:80;
+  background:rgba(0,0,0,0.92);
+  align-items:center;justify-content:center;
+  padding:24px;
+}
+#netPanel.show{display:flex;}
+
+.net-inner{
+  position:relative;
+  width:100%;max-width:340px;
+  padding:28px 22px 22px;
+  border:1.5px solid rgba(255,255,255,0.28);
+  background:#000;
+  box-shadow:0 0 40px rgba(255,255,255,0.08),inset 0 0 60px rgba(255,255,255,0.03);
+}
+.net-title{
+  font-size:16px;font-weight:900;letter-spacing:4px;
+  color:#fff;text-align:center;margin-bottom:20px;
+}
+.net-btn{
+  display:block;width:100%;padding:13px;
+  font:inherit;font-size:13px;font-weight:800;letter-spacing:2px;
+  border:1.5px solid rgba(255,255,255,0.5);
+  background:transparent;color:#fff;cursor:pointer;
+  transition:.15s;
+}
+.net-btn:active{transform:scale(0.98);}
+.net-btn.primary{background:#fff;color:#000;border-color:#fff;}
+.net-btn.ghost{font-size:11px;padding:10px;letter-spacing:1.5px;color:#888;}
+.net-btn:disabled{opacity:.4;cursor:not-allowed;}
+
+.net-or{
+  text-align:center;font-size:10px;color:#555;
+  letter-spacing:3px;margin:14px 0;
+}
+.net-join-row{display:flex;gap:8px;}
+.net-join-row input{
+  flex:1;min-width:0;
+  background:#0d151d;border:1.5px solid rgba(255,255,255,0.25);
+  color:#fff;padding:11px 12px;
+  font:inherit;font-size:14px;font-weight:700;
+  letter-spacing:2px;text-align:center;text-transform:uppercase;
+  outline:none;
+}
+.net-join-row input:focus{border-color:#fff;}
+
+.net-room-code{
+  text-align:center;font-size:12px;color:#888;
+  letter-spacing:1px;margin-bottom:14px;
+}
+.net-room-code span{
+  color:#7fe7ff;font-weight:900;font-size:18px;
+  letter-spacing:4px;margin:0 6px;
+}
+.net-copy{
+  background:none;border:none;color:#888;
+  font:inherit;font-size:10px;cursor:pointer;
+  text-decoration:underline;
+}
+.net-players-title{
+  font-size:10px;color:#666;letter-spacing:2px;
+  margin:14px 0 8px;
+}
+.net-player-list{
+  max-height:180px;overflow-y:auto;
+  margin-bottom:14px;
+  border:1px solid rgba(255,255,255,0.1);
+  padding:6px;
+}
+.net-player{
+  display:flex;justify-content:space-between;
+  padding:6px 8px;font-size:12px;
+  color:#ccc;letter-spacing:1px;
+}
+.net-player .host{
+  color:#ffd166;font-size:9px;
+  border:1px solid #ffd166;border-radius:3px;
+  padding:1px 5px;letter-spacing:1px;
+}
+.net-player .me{color:#7fe7ff;font-weight:800;}
+.net-close{
+  position:absolute;top:8px;right:12px;
+  background:none;border:none;color:#666;
+  font-size:18px;cursor:pointer;
+}
+.net-status{
+  font-size:10.5px;
+  color:#666;
+  text-align:center;
+  margin-top:14px;
+  letter-spacing:1px;
+  min-height:14px;
+}
+.net-status.err{color:#ff8a80;}
+.net-status.ok{color:#7fe7a0;}
+
 @media (orientation: landscape) {
   #moveStick{
     width:120px;height:120px;
@@ -457,46 +522,73 @@ body.touch #rightActions{display:flex;}
   <div id="dots"></div>
 
   <div id="hint">
-    W Â· S å‰è¿› / åé€€ã€€ã€€A Â· D è½¬å‘ã€€ã€€M æ ‡è®°å¢™é¢ã€€ã€€R é‡æ¥
+    W ¡¤ S Ç°½ø / ºóÍË¡¡¡¡A ¡¤ D ×ªÏò¡¡¡¡M ±ê¼ÇÇ½Ãæ¡¡¡¡R ÖØÀ´
   </div>
 
-  <!-- è½¬å‘åŒºåŸŸï¼šå³åŠå±ï¼Œé€æ˜ï¼Œè¦†ç›–åœ¨ç”»å¸ƒä¸Šæ–¹ -->
   <div id="turnArea"></div>
 
-  <!-- è½¬å‘æŒ‡ç¤ºæ¡ -->
   <div id="turnIndicator">
     <div class="center"></div>
     <div class="fill" id="turnFill"></div>
   </div>
 
-  <!-- ç§»åŠ¨æ‘‡æ†ï¼šå·¦ä¸‹è§’ï¼Œå›ºå®šåº•åº§ -->
   <div id="moveStick">
     <div class="stick-knob"></div>
-    <div class="stick-label">ç§»åŠ¨</div>
+    <div class="stick-label">ÒÆ¶¯</div>
   </div>
 
-  <!-- å³ä¾§æŒ‰é’® -->
   <div id="rightActions">
     <button class="action-btn" id="markBtn">
-      <span class="symbol">âœ•</span>
-      <span class="label">æ ‡è®°</span>
+      <span class="symbol">?</span>
+      <span class="label">±ê¼Ç</span>
     </button>
     <button class="action-btn" id="resetBtn">
-      <span class="symbol">â†»</span>
-      <span class="label">é‡æ¥</span>
+      <span class="symbol">?</span>
+      <span class="label">ÖØÀ´</span>
     </button>
   </div>
 
   <div id="bigText"></div>
-  <div id="markHint">å·² æ ‡ è®°</div>
+  <div id="markHint">ÒÑ ±ê ¼Ç</div>
 
   <div id="overlay">
     <div class="card" id="card"></div>
   </div>
+
+  <div id="netPanel">
+    <div class="net-inner">
+      <div class="net-title">Áª »ú Ä£ Ê½</div>
+
+      <div id="netMenu">
+        <button class="net-btn primary" id="btnCreateRoom">´´ ½¨ ·¿ ¼ä</button>
+        <div class="net-or">¡ª »ò ¡ª</div>
+        <div class="net-join-row">
+          <input id="roomInput" type="text" maxlength="6" placeholder="·¿¼äÂë" spellcheck="false" autocomplete="off">
+          <button class="net-btn" id="btnJoinRoom" style="width:auto;padding:11px 18px;">¼Ó Èë</button>
+        </div>
+        <div class="net-status" id="netMenuStatus"></div>
+      </div>
+
+      <div id="netRoom" style="display:none;">
+        <div class="net-room-code">
+          ·¿¼äÂë <span id="roomCodeDisplay">------</span>
+          <button class="net-copy" id="btnCopyRoom">¸´ÖÆ</button>
+        </div>
+        <div class="net-players-title">Íæ¼Ò (<span id="playerCount">1</span>)</div>
+        <div id="playerList" class="net-player-list"></div>
+        <button class="net-btn ghost" id="btnLeaveRoom">Àë ¿ª ·¿ ¼ä</button>
+      </div>
+
+      <button class="net-close" id="btnNetClose">?</button>
+    </div>
+  </div>
 </div>
 
+<!-- CloudBase SDK -->
+<script src="https://static.cloudbase.net/cloudbase-js-sdk/1.7.2/cloudbase.full.js"></script>
+
+<!-- Service Worker -->
 <script>
-  // åœ¨ index.html çš„ <script> ä¸­æ³¨å†Œ
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./sw.js')
@@ -504,14 +596,54 @@ if ('serviceWorker' in navigator) {
       .catch(err => console.log('SW registration failed:', err));
   });
 }
+</script>
+
+<!-- ÓÎÏ·Ö÷½Å±¾ -->
+<script>
 (function(){
 'use strict';
 
 /* =========================================================
-   å·¥å…·
+   CloudBase ³õÊ¼»¯
+   ========================================================= */
+const CLOUDBASE_ENV = 'migong-d5g0wqe3z8b11adc9';
+const CLOUDBASE_KEY = 'eyJhbGciOiJSUzI1NiIsImtpZCI6IjlkMWRjMzFlLWI0ZDAtNDQ4Yi1hNzZmLWIwY2M2M2Q4MTQ5OCJ9.eyJpc3MiOiJodHRwczovL21pZ29uZy1kNWcwd3FlM3o4YjExYWRjOS5hcC1zaGFuZ2hhaS50Y2ItYXBpLnRlbmNlbnRjbG91ZGFwaS5jb20iLCJzdWIiOiJhbm9uIiwiYXVkIjoibWlnb25nLWQ1ZzB3cWUzejhiMTFhZGM5IiwiZXhwIjo0MDk1MTM3MTYyLCJpYXQiOjE3OTE0NTM5NjIsIm5vbmNlIjoiMDlrNzd5V09Rak92VXJ1dEtyZzhnQSIsImF0X2hhc2giOiIwOWs3N3lXT1FqT3ZVcnV0S3JnOGdBIiwibmFtZSI6IkFub255bW91cyIsInNjb3BlIjoiYW5vbnltb3VzIiwicHJvamVjdF9pZCI6Im1pZ29uZy1kNWcwd3FlM3o4YjExYWRjOSIsIm1ldGEiOnsicGxhdGZvcm0iOiJQdWJsaXNoYWJsZUtleSJ9LCJ1c2VyX3R5cGUiOiIiLCJjbGllbnRfdHlwZSI6ImNsaWVudF91c2VyIiwiaXNfc3lzdGVtX2FkbWluIjpmYWxzZX0.a9hmwemOpwKILMbJcYwyzS9-jb9j9baGfUFdtUmeR0XS6VRVmVl_PJM5DH58x3ckpKUNBa_LV3Ow3OEZviiOqUrNCihcB4csgd6qelaOXEG5jU6pguxShAleZ_cN0Mk3oCTjG_LsM4KAAlVhsyCgBGtpihUWlOF3RfZsb9GjG6EQ8mqqXAhTIh_b2gZlp_Tla76VHsTc51w6_4zEoW4nkeQ8yt6K3_QH2PfVG-Y2rxpqZWH80YjiC1J2b5w7tT8MfVAeEgKItMsXMk7V3rI2dDIwvHRnKicpCJDviZ1_9Ruc3-7EiDy87v6JrUbDC2809j4MNsHY75CM1IGlZ8ywDw';
+
+let tcbApp = null;
+let tcbDb = null;
+window.fbReady = false;
+window.fbError = null;
+
+(function initCloudBase(){
+  if (typeof cloudbase === 'undefined') {
+    window.fbError = 'CloudBase SDK Î´¼ÓÔØ£¬Çë¼ì²éÍøÂç';
+    console.warn('[Áª»ú] ' + window.fbError);
+    window.dispatchEvent(new Event('fb-ready'));
+    return;
+  }
+  try {
+    tcbApp = cloudbase.init({
+      env: CLOUDBASE_ENV,
+      accessKey: CLOUDBASE_KEY
+    });
+    tcbDb = tcbApp.database();
+    window.tcbApp = tcbApp;
+    window.tcbDb = tcbDb;
+    window.fbReady = true;
+    console.log('[Áª»ú] CloudBase ¾ÍĞ÷');
+  } catch (err) {
+    window.fbError = 'CloudBase ³õÊ¼»¯Ê§°Ü: ' + (err.message || err);
+    console.warn('[Áª»ú] ' + window.fbError);
+  }
+  window.dispatchEvent(new Event('fb-ready'));
+})();
+
+/* =========================================================
+   ¹¤¾ß
    ========================================================= */
 const TAU = Math.PI * 2;
 const clamp = (v,a,b) => v < a ? a : v > b ? b : v;
+const lerp  = (a,b,t) => a + (b-a) * t;
 const pad2  = n => String(n).padStart(2,'0');
 
 const isTouch = matchMedia('(pointer: coarse)').matches ||
@@ -528,21 +660,46 @@ function fmtTime(sec) {
 }
 
 /* =========================================================
-   éš¾åº¦é…ç½®
+   ÖÖ×ÓËæ»úÊı
+   ========================================================= */
+let rng = Math.random;
+let currentSeed = 0;
+
+function mulberry32(seed) {
+  return function() {
+    seed |= 0; seed = seed + 0x6D2B79F5 | 0;
+    let t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+
+function setSeed(seed) {
+  currentSeed = seed;
+  rng = mulberry32(seed);
+}
+
+function resetRandom() {
+  rng = Math.random;
+  currentSeed = 0;
+}
+
+/* =========================================================
+   ÄÑ¶ÈÅäÖÃ
    ========================================================= */
 const DIFFICULTIES = {
   easy: {
-    label: 'ç®€å•', desc: 'ä¸­ç­‰è¿·å®« Â· ç§»åŠ¨å¿«',
+    label: '¼òµ¥', desc: 'ÖĞµÈÃÔ¹¬ ¡¤ ÒÆ¶¯¿ì',
     levels: [{ size: 15 }, { size: 19 }, { size: 23 }],
     moveSpeed: 2.1, turnSpeed: 2.5
   },
   normal: {
-    label: 'æ™®é€š', desc: 'å¤§è¿·å®« Â· æ ‡å‡†é€Ÿåº¦',
+    label: 'ÆÕÍ¨', desc: '´óÃÔ¹¬ ¡¤ ±ê×¼ËÙ¶È',
     levels: [{ size: 21 }, { size: 27 }, { size: 33 }],
     moveSpeed: 1.75, turnSpeed: 2.1
   },
   hard: {
-    label: 'å›°éš¾', desc: 'è¶…å¤§è¿·å®« Â· ç§»åŠ¨æ…¢',
+    label: 'À§ÄÑ', desc: '³¬´óÃÔ¹¬ ¡¤ ÒÆ¶¯Âı',
     levels: [{ size: 29 }, { size: 35 }, { size: 41 }],
     moveSpeed: 1.45, turnSpeed: 1.85
   }
@@ -562,7 +719,7 @@ function applyDifficulty(diff) {
 }
 
 /* =========================================================
-   ç”»å¸ƒ
+   »­²¼
    ========================================================= */
 const canvas = document.getElementById('game');
 const ctx = canvas.getContext('2d', { alpha: false });
@@ -582,7 +739,7 @@ window.addEventListener('orientationchange', () => setTimeout(resizeCanvas, 120)
 resizeCanvas();
 
 /* =========================================================
-   çŠ¶æ€
+   ÓÎÏ·×´Ì¬
    ========================================================= */
 let map = [];
 let marks = new Set();
@@ -603,7 +760,27 @@ let bestTimes = [];
 const keys = { up: false, down: false, left: false, right: false };
 
 /* =========================================================
-   è¿·å®«ç”Ÿæˆ
+   Áª»ú×´Ì¬
+   ========================================================= */
+const NET = {
+  ready: false,
+  roomId: null,
+  myId: 'u_' + Math.random().toString(36).slice(2, 8),
+  myName: 'Íæ¼Ò' + Math.random().toString(36).slice(2, 5),
+  isHost: false,
+  connected: false,
+  lastSync: 0,
+  syncInterval: 100,
+  watcher: null,
+  playersSnapshot: {},
+  marksSnapshot: {}
+};
+
+const otherPlayers = {};
+let roomHostId = null;
+
+/* =========================================================
+   ÃÔ¹¬Éú³É
    ========================================================= */
 function generateMaze(size) {
   let w = size, h = size;
@@ -628,7 +805,7 @@ function generateMaze(size) {
       }
     }
     if (avail.length === 0) { stack.pop(); continue; }
-    const [nx, ny, dx, dy] = avail[Math.floor(Math.random() * avail.length)];
+    const [nx, ny, dx, dy] = avail[Math.floor(rng() * avail.length)];
     m[ny][nx] = 0;
     m[y + dy / 2][x + dx / 2] = 0;
     stack.push([nx, ny]);
@@ -636,7 +813,7 @@ function generateMaze(size) {
 
   for (let y = 2; y < h - 2; y++) {
     for (let x = 2; x < w - 2; x++) {
-      if (m[y][x] === 1 && Math.random() < 0.08) {
+      if (m[y][x] === 1 && rng() < 0.08) {
         const hOpen = m[y][x-1] === 0 && m[y][x+1] === 0;
         const vOpen = m[y-1][x] === 0 && m[y+1][x] === 0;
         if (hOpen || vOpen) m[y][x] = 0;
@@ -696,7 +873,7 @@ function loadLevel(idx) {
 }
 
 /* =========================================================
-   ç¢°æ’
+   Åö×²
    ========================================================= */
 function circleHitsWall(x, y, r) {
   const x0 = Math.floor(x - r), x1 = Math.floor(x + r);
@@ -723,7 +900,7 @@ function tryMove(dx, dy) {
 }
 
 /* =========================================================
-   å°„çº¿æŠ•å°„
+   ÉäÏßÍ¶Éä
    ========================================================= */
 let rayBuf = null;
 
@@ -803,7 +980,7 @@ function castRays() {
 }
 
 /* =========================================================
-   æ¸²æŸ“
+   äÖÈ¾
    ========================================================= */
 function render(rays) {
   const W = logicW, H = logicH, halfH = H * 0.5;
@@ -912,6 +1089,7 @@ function render(rays) {
   }
 
   renderExit(rays);
+  renderOtherPlayers(rays);
 
   const cx = Math.round(W / 2), cy = Math.round(H / 2);
   ctx.globalAlpha = 0.55;
@@ -976,27 +1154,91 @@ function renderExit(rays) {
   ctx.globalAlpha = 1;
 }
 
+function renderOtherPlayers(rays) {
+  if (!NET.connected) return;
+  const W = logicW, H = logicH, halfH = H * 0.5;
+  const projScale = H * 0.78;
+
+  for (const id in otherPlayers) {
+    const op = otherPlayers[id];
+    const px = op.renderX !== undefined ? op.renderX : op.x;
+    const py = op.renderY !== undefined ? op.renderY : op.y;
+
+    const relX = px - player.x;
+    const relY = py - player.y;
+    const invDet = 1 / (rays.planeX * rays.dirY - rays.dirX * rays.planeY);
+    const transX = invDet * (rays.dirY * relX - rays.dirX * relY);
+    const transY = invDet * (-rays.planeY * relX + rays.planeX * relY);
+
+    if (transY <= 0.15) continue;
+    const screenX = (W / 2) * (1 + transX / transY);
+    if (screenX < -100 || screenX > W + 100) continue;
+
+    const col = clamp(Math.round(screenX), 0, W - 1);
+    if (transY > rays.dists[col] + 0.4) continue;
+
+    const spriteH = (projScale / transY) * 0.62;
+    const spriteW = spriteH * 0.55;
+    const cx = screenX;
+    const cy = halfH + spriteH * 0.18;
+
+    const hw = spriteW / 2;
+    const hh = spriteH;
+    if (hw < 1) continue;
+
+    let a = 1 - transY * 0.04;
+    if (a < 0.3) a = 0.3;
+    if (a > 1) a = 1;
+
+    ctx.globalAlpha = a * 0.85;
+    ctx.fillStyle = 'rgba(127, 231, 255, 0.18)';
+    ctx.strokeStyle = '#7fe7ff';
+    ctx.lineWidth = 1.8;
+    ctx.beginPath();
+    ctx.rect(cx - hw, cy - hh, spriteW, spriteH);
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.arc(cx, cy - hh * 1.15, hw * 0.55, 0, TAU);
+    ctx.fillStyle = 'rgba(127, 231, 255, 0.35)';
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.globalAlpha = a;
+    ctx.fillStyle = '#a9f0ff';
+    ctx.font = 'bold ' + Math.max(10, spriteW * 0.35) + 'px "Courier New", monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText(op.name || id.slice(-4), cx, cy - hh * 1.55);
+
+    if (op.done) {
+      ctx.fillStyle = '#7fe7a0';
+      ctx.font = 'bold ' + Math.max(12, spriteW * 0.4) + 'px "Courier New", monospace';
+      ctx.fillText('?', cx, cy + hh * 0.3);
+    }
+
+    ctx.globalAlpha = 1;
+  }
+}
+
 /* =========================================================
-   ç©å®¶æ›´æ–°
+   Íæ¼Ò¸üĞÂ
    ========================================================= */
 function updatePlayer(dt) {
   if (phase !== 'playing') return;
 
   let moveF = 0, moveS = 0, turnInput = 0;
 
-  // é”®ç›˜
   if (keys.up)    moveF += 1;
   if (keys.down)  moveF -= 1;
   if (keys.left)  turnInput -= 1;
   if (keys.right) turnInput += 1;
 
-  // ç§»åŠ¨æ‘‡æ†ï¼ˆç±»å’Œå¹³ç²¾è‹±ï¼šä»è§¦æ‘¸ç‚¹ç®—åç§»ï¼‰
   if (moveStick.active) {
     moveF = -moveStick.ny;
     moveS = moveStick.nx;
   }
 
-  // è½¬å‘åŒºåŸŸï¼ˆç±»å’Œå¹³ç²¾è‹±ï¼šæ»‘å±è½¬å‘ï¼‰
   if (turnArea.active) {
     turnInput = turnArea.value;
   }
@@ -1005,7 +1247,6 @@ function updatePlayer(dt) {
   moveS = clamp(moveS, -1, 1);
   turnInput = clamp(turnInput, -1, 1);
 
-  // ç§»åŠ¨
   if (Math.abs(moveF) > 0.001 || Math.abs(moveS) > 0.001) {
     const fx = Math.cos(player.angle), fy = Math.sin(player.angle);
     const rx = -Math.sin(player.angle), ry = Math.cos(player.angle);
@@ -1021,7 +1262,6 @@ function updatePlayer(dt) {
     player.bob *= Math.exp(-6 * dt);
   }
 
-  // è½¬å‘
   if (Math.abs(turnInput) > 0.001) {
     player.angle += turnInput * TURN_SPEED * dt;
     if (player.angle < 0) player.angle += TAU;
@@ -1037,7 +1277,7 @@ function updatePlayer(dt) {
 }
 
 /* =========================================================
-   æ ‡è®°ç³»ç»Ÿ
+   ±ê¼ÇÏµÍ³
    ========================================================= */
 function findAimedWall() {
   const rayDirX = Math.cos(player.angle);
@@ -1084,17 +1324,33 @@ function toggleMark() {
   if (marks.has(key)) {
     marks.delete(key);
     playBeep(500, 0.05, 0.04);
-    showMarkHint('å– æ¶ˆ æ ‡ è®°');
+    showMarkHint('È¡ Ïû ±ê ¼Ç');
   } else {
     marks.add(key);
     playBeep(1200, 0.05, 0.05);
-    showMarkHint('å·² æ ‡ è®°');
+    showMarkHint('ÒÑ ±ê ¼Ç');
   }
+
+  // ¡ï Áª»úÍ¬²½±ê¼Ç
+  syncMarks();
 
   const btn = document.getElementById('markBtn');
   if (btn) {
     btn.classList.add('pressed');
     setTimeout(() => btn.classList.remove('pressed'), 120);
+  }
+}
+
+async function syncMarks() {
+  if (!NET.connected || !tcbDb || !NET.roomId) return;
+  try {
+    const marksObj = {};
+    marks.forEach(k => marksObj[k] = true);
+    await tcbDb.collection('rooms').doc(NET.roomId).update({
+      data: { marks: marksObj }
+    });
+  } catch (err) {
+    console.warn('Í¬²½±ê¼ÇÊ§°Ü:', err);
   }
 }
 
@@ -1108,7 +1364,7 @@ function showMarkHint(text) {
 }
 
 /* =========================================================
-   å…³å¡å®Œæˆ / å€’è®¡æ—¶ / éŸ³æ•ˆ
+   ¹Ø¿¨Íê³É / µ¹¼ÆÊ± / ÒôĞ§
    ========================================================= */
 function onReachExit() {
   if (phase !== 'playing') return;
@@ -1116,17 +1372,26 @@ function onReachExit() {
   bestTimes[level] = Math.min(bestTimes[level] ?? Infinity, levelTime);
   playBeep(880, 0.08, 0.06);
 
+  // ¡ï Í¨Öª·şÎñÆ÷×Ô¼ºÍê³É
+  if (NET.connected && tcbDb && NET.roomId) {
+    updateMyPlayer({ done: true });
+  }
+
   const isLast = level >= LEVELS.length - 1;
   if (isLast) {
     phase = 'allClear';
     setTimeout(() => playBeep(1320, 0.12, 0.08), 120);
     setTimeout(showAllClear, 700);
   } else {
-    showBig('CLEAR', 900);
-    setTimeout(() => {
-      loadLevel(level + 1);
-      startCountdown();
-    }, 1100);
+    if (!NET.connected) {
+      showBig('CLEAR', 900);
+      setTimeout(() => {
+        loadLevel(level + 1);
+        startCountdown();
+      }, 1100);
+    } else {
+      showBig('µÈ ´ı ¶Ó ÓÑ¡­', 1800);
+    }
   }
 }
 
@@ -1143,6 +1408,9 @@ function startCountdown() {
       phase = 'playing';
       levelStartTime = performance.now();
       levelTime = 0;
+      if (NET.connected) {
+        updateMyPlayer({ done: false, x: 1.5, y: 1.5, angle: 0 });
+      }
       return;
     }
     const s = seq[i++];
@@ -1176,7 +1444,7 @@ function playBeep(freq, dur, vol) {
 }
 
 /* =========================================================
-   HUD / å¤§æ–‡å­— / é®ç½©
+   HUD / ´óÎÄ×Ö / ÕÚÕÖ
    ========================================================= */
 const hudLevelEl = document.getElementById('hudLevel');
 const hudTimeEl  = document.getElementById('hudTime');
@@ -1188,7 +1456,7 @@ function updateHUD() {
 function updateDots() {
   let s = '';
   for (let i = 0; i < LEVELS.length; i++) {
-    s += i <= level ? 'â—' : 'â—‹';
+    s += i <= level ? '¡ñ' : '¡ğ';
     if (i < LEVELS.length - 1) s += ' ';
   }
   dotsEl.innerHTML = s;
@@ -1233,6 +1501,11 @@ function bindOverlayEvents() {
   const btnStart = card.querySelector('#btnStart');
   if (btnStart) btnStart.addEventListener('click', startGame);
 
+  const btnNetOpen = card.querySelector('#btnNetOpen');
+  if (btnNetOpen) {
+    btnNetOpen.addEventListener('click', openNetPanel);
+  }
+
   const btnAgain = card.querySelector('#btnAgain');
   if (btnAgain) btnAgain.addEventListener('click', () => {
     hideOverlay();
@@ -1256,26 +1529,35 @@ function showMenu() {
     return `<button class="diff-btn${active}" data-diff="${k}">${cfg.label}</button>`;
   }).join('');
 
+  let netLine = '';
+  if (NET.connected) {
+    netLine = `<div style="margin:10px 0;font-size:11px;color:#7fe7ff;letter-spacing:1.5px;">
+      ¡ñ ÒÑÁ¬½Ó·¿¼ä <b>${NET.roomId}</b> ¡¤ µÈ´ı·¿Ö÷¿ªÊ¼
+    </div>`;
+  }
+
   showOverlay(`
-    <div class="icon">â–¶</div>
-    <h1>è¿· å®«</h1>
+    <div class="icon">?</div>
+    <h1>ÃÔ ¹¬</h1>
     <p>
-      æ‰¾åˆ°é—ªçƒçš„å‡ºå£æ ‡è®°<br>
-      ç©¿è¿‡ <span class="hl">${LEVELS.length} å±‚</span> è¿·å®«æŠµè¾¾ç»ˆç‚¹
+      ÕÒµ½ÉÁË¸µÄ³ö¿Ú±ê¼Ç<br>
+      ´©¹ı <span class="hl">${LEVELS.length} ²ã</span> ÃÔ¹¬µÖ´ïÖÕµã
     </p>
 
-    <div class="diff-title">é€‰ æ‹© éš¾ åº¦</div>
+    <div class="diff-title">Ñ¡ Ôñ ÄÑ ¶È</div>
     <div class="diff-select">
       ${diffButtons}
     </div>
     <div class="diff-info">${DIFFICULTIES[currentDiff].desc}</div>
 
-    <button class="btn" id="btnStart">å¼€ å§‹</button>
+    ${netLine}
+
+    <button class="btn ghost" id="btnNetOpen" style="margin-bottom:10px;">Áª »ú Ä£ Ê½</button>
+    <button class="btn" id="btnStart">¿ª Ê¼</button>
 
     <div style="margin-top:16px;font-size:10px;color:#555;letter-spacing:2px;line-height:1.9;">
-      <div>é”®ç›˜ï¼šW/S å‰å Â· A/D è½¬å‘ Â· M æ ‡è®°</div>
-      <div style="margin-top:6px;color:#444;">è§¦å±ï¼šå·¦æ‘‡æ†ç§»åŠ¨ Â· å³åŠå±æ»‘å±è½¬å‘</div>
-      <div style="color:#444;">æ”¯æŒæ¨ªå±ä¸ç«–å±</div>
+      <div>¼üÅÌ£ºW/S Ç°ºó ¡¤ A/D ×ªÏò ¡¤ M ±ê¼Ç</div>
+      <div style="margin-top:6px;color:#444;">´¥ÆÁ£º×óÒ¡¸ËÒÆ¶¯ ¡¤ ÓÒ°ëÆÁ»¬ÆÁ×ªÏò</div>
     </div>
   `);
 }
@@ -1283,6 +1565,11 @@ function showMenu() {
 function startGame() {
   initAudio();
   hideOverlay();
+
+  if (NET.connected && NET.isHost) {
+    updateRoomMeta({ phase: 'countdown', level: 0 });
+  }
+
   totalStartTime = performance.now();
   totalTime = 0;
   bestTimes = [];
@@ -1295,30 +1582,30 @@ function showAllClear() {
   for (let i = 0; i < LEVELS.length; i++) {
     rows += `
       <div class="stat">
-        <div class="k">ç¬¬ ${i + 1} å…³</div>
+        <div class="k">µÚ ${i + 1} ¹Ø</div>
         <div class="v">${fmtTime(bestTimes[i] ?? 0)}</div>
       </div>
     `;
   }
 
   showOverlay(`
-    <div class="icon">â˜…</div>
-    <h1>å…¨ éƒ¨ é€š å…³</h1>
-    <p>éš¾åº¦ï¼š<span class="hl">${DIFFICULTIES[currentDiff].label}</span></p>
+    <div class="icon">¡ï</div>
+    <h1>È« ²¿ Í¨ ¹Ø</h1>
+    <p>ÄÑ¶È£º<span class="hl">${DIFFICULTIES[currentDiff].label}</span></p>
     <div class="stats">${rows}</div>
     <div class="stats one">
       <div class="stat">
-        <div class="k">æ€»æ—¶é—´</div>
+        <div class="k">×ÜÊ±¼ä</div>
         <div class="v">${fmtTime(totalTime)}</div>
       </div>
     </div>
-    <button class="btn" id="btnAgain">å† æ¥ ä¸€ æ¬¡</button>
-    <button class="btn ghost" id="btnMenu">è¿”å›æ ‡é¢˜</button>
+    <button class="btn" id="btnAgain">ÔÙ À´ Ò» ´Î</button>
+    <button class="btn ghost" id="btnMenu">·µ»Ø±êÌâ</button>
   `);
 }
 
 /* =========================================================
-   é”®ç›˜
+   ¼üÅÌ
    ========================================================= */
 function handleKey(e, isDown) {
   const k = e.key.toLowerCase();
@@ -1344,13 +1631,7 @@ window.addEventListener('blur', () => {
 });
 
 /* =========================================================
-   â˜… ç§»åŠ¨æ‘‡æ†ï¼ˆç±»å’Œå¹³ç²¾è‹±ï¼‰
-   ---------------------------------------------------------
-   é€»è¾‘ï¼š
-   1. è§¦æ‘¸åº•åº§åŒºåŸŸå†…ä»»æ„ä½ç½® â†’ è¯¥ç‚¹æˆä¸ºã€ŒåŸç‚¹ã€
-   2. æ‰‹æŒ‡ä»åŸç‚¹æ‹–æ‹½ â†’ äº§ç”Ÿç§»åŠ¨æ–¹å‘ä¸åŠ›åº¦
-   3. æ¾æ‰‹æˆ–ç§»å‡º â†’ ç«‹åˆ»å½’é›¶
-   4. æ”¯æŒå¤šç‚¹è§¦æ§ï¼ˆåŒæ—¶æŒ‰ä½ç§»åŠ¨ + è½¬å‘ï¼‰
+   ÒÆ¶¯Ò¡¸Ë
    ========================================================= */
 class MoveStick {
   constructor(baseEl) {
@@ -1358,15 +1639,12 @@ class MoveStick {
     this.knobEl = baseEl.querySelector('.stick-knob');
     this.pointerId = null;
     this.active = false;
-
     this.nx = 0;
     this.ny = 0;
-
     this.originX = 0;
     this.originY = 0;
-
-    this.maxDist = 50;      // ä»åŸç‚¹ç®—èµ·çš„æœ€å¤§æ‹–æ‹½è·ç¦»
-    this.deadZone = 7;      // æ­»åŒºåƒç´ 
+    this.maxDist = 50;
+    this.deadZone = 7;
 
     baseEl.addEventListener('pointerdown', e => this.onDown(e), { passive: false });
     document.addEventListener('pointermove', e => this.onMove(e), { passive: false });
@@ -1377,30 +1655,22 @@ class MoveStick {
 
   onDown(e) {
     if (this.pointerId !== null) return;
-
-    // æ£€æŸ¥è§¦æ‘¸æ˜¯å¦åœ¨åº•åº§èŒƒå›´å†…ï¼ˆç¨å¾®æ”¾å®½ï¼‰
     const rect = this.baseEl.getBoundingClientRect();
     const cx = rect.left + rect.width / 2;
     const cy = rect.top + rect.height / 2;
     const r = rect.width / 2;
-
     const d = Math.hypot(e.clientX - cx, e.clientY - cy);
-    if (d > r * 1.4) return;  // å¤ªè¿œï¼Œå¿½ç•¥
+    if (d > r * 1.4) return;
 
     e.preventDefault();
     e.stopPropagation();
-
     this.pointerId = e.pointerId;
     try { this.baseEl.setPointerCapture(e.pointerId); } catch (err) {}
-
-    // â˜… ä»¥è§¦æ‘¸ç‚¹ä¸ºåŸç‚¹ï¼ˆå’Œå¹³ç²¾è‹±å¼ï¼‰
     this.originX = e.clientX;
     this.originY = e.clientY;
-
     this.active = true;
     this.nx = 0;
     this.ny = 0;
-
     this.baseEl.classList.add('active');
     this.updateKnob(0, 0);
   }
@@ -1408,21 +1678,17 @@ class MoveStick {
   onMove(e) {
     if (e.pointerId !== this.pointerId) return;
     e.preventDefault();
-
     const dx = e.clientX - this.originX;
     const dy = e.clientY - this.originY;
     const dist = Math.hypot(dx, dy);
-
     if (dist < this.deadZone) {
-      this.nx = 0;
-      this.ny = 0;
+      this.nx = 0; this.ny = 0;
     } else {
       const clamped = Math.min(dist, this.maxDist);
       const norm = clamped / this.maxDist;
       this.nx = (dx / dist) * norm;
       this.ny = (dy / dist) * norm;
     }
-
     this.updateKnob(dx, dy);
   }
 
@@ -1430,18 +1696,14 @@ class MoveStick {
     const rect = this.baseEl.getBoundingClientRect();
     const cx = rect.left + rect.width / 2;
     const cy = rect.top + rect.height / 2;
-
-    // æ—‹é’®ä½ç½® = è§¦æ‘¸å®é™…ä½ç½®ï¼Œç›¸å¯¹åº•åº§ä¸­å¿ƒ
     let kx = (this.originX + dx) - cx;
     let ky = (this.originY + dy) - cy;
-
     const maxR = rect.width / 2 - 22;
     const kd = Math.hypot(kx, ky);
     if (kd > maxR) {
       kx = kx / kd * maxR;
       ky = ky / kd * maxR;
     }
-
     this.knobEl.style.transform =
       `translate(calc(-50% + ${kx}px), calc(-50% + ${ky}px))`;
   }
@@ -1449,38 +1711,28 @@ class MoveStick {
   onUp(e) {
     if (e.pointerId !== this.pointerId) return;
     e.preventDefault();
-
     this.pointerId = null;
     this.active = false;
     this.nx = 0;
     this.ny = 0;
-
     this.baseEl.classList.remove('active');
     this.knobEl.style.transform = 'translate(-50%, -50%)';
   }
 }
 
 /* =========================================================
-   â˜… è½¬å‘åŒºåŸŸï¼ˆç±»å’Œå¹³ç²¾è‹±æ»‘å±è½¬å‘ï¼‰
-   ---------------------------------------------------------
-   é€»è¾‘ï¼š
-   1. è§¦æ‘¸å³åŠå±ä»»æ„ä½ç½® â†’ è®°å½•èµ·å§‹ X åæ ‡
-   2. æ‰‹æŒ‡æ°´å¹³æ»‘åŠ¨ â†’ æ»‘åŠ¨è·ç¦»æ˜ å°„ä¸ºè½¬å‘åŠ›åº¦
-   3. æ¾æ‰‹ â†’ ç«‹åˆ»åœæ­¢è½¬å‘
-   4. è½¬åŠ¨åŠ›åº¦å®æ—¶æ˜¾ç¤ºåœ¨å±å¹•ä¸­å¤®çš„æŒ‡ç¤ºæ¡ä¸Š
+   ×ªÏòÇøÓò
    ========================================================= */
 class TurnArea {
   constructor(el, indicatorFill) {
     this.el = el;
     this.indicatorFill = indicatorFill;
-
     this.pointerId = null;
     this.active = false;
     this.originX = 0;
-    this.value = 0;      // [-1, 1]
-
-    this.maxDist = 100;  // è¾¾åˆ°æœ€å¤§è½¬å‘åŠ›åº¦çš„æ»‘åŠ¨è·ç¦»
-    this.deadZone = 14;  // æ­»åŒº
+    this.value = 0;
+    this.maxDist = 100;
+    this.deadZone = 14;
 
     el.addEventListener('pointerdown', e => this.onDown(e), { passive: false });
     document.addEventListener('pointermove', e => this.onMove(e), { passive: false });
@@ -1491,17 +1743,13 @@ class TurnArea {
 
   onDown(e) {
     if (this.pointerId !== null) return;
-
     e.preventDefault();
     e.stopPropagation();
-
     this.pointerId = e.pointerId;
     try { this.el.setPointerCapture(e.pointerId); } catch (err) {}
-
     this.originX = e.clientX;
     this.active = true;
     this.value = 0;
-
     this.el.classList.add('active');
     this.updateIndicator(0);
   }
@@ -1509,9 +1757,7 @@ class TurnArea {
   onMove(e) {
     if (e.pointerId !== this.pointerId) return;
     e.preventDefault();
-
     const dx = e.clientX - this.originX;
-
     if (Math.abs(dx) < this.deadZone) {
       this.value = 0;
     } else {
@@ -1519,16 +1765,14 @@ class TurnArea {
       const mag = Math.min(1, (Math.abs(dx) - this.deadZone) / (this.maxDist - this.deadZone));
       this.value = sign * mag;
     }
-
     this.updateIndicator(dx);
   }
 
   updateIndicator(dx) {
     if (!this.indicatorFill) return;
-    const half = 60; // æŒ‡ç¤ºæ¡åŠå®½
+    const half = 60;
     const clamped = clamp(dx / this.maxDist, -1, 1);
     const w = Math.abs(clamped) * half;
-
     if (clamped < 0) {
       this.indicatorFill.style.left = (50 - (w / 120) * 100) + '%';
       this.indicatorFill.style.width = (w / 120) * 100 + '%';
@@ -1541,17 +1785,14 @@ class TurnArea {
   onUp(e) {
     if (e.pointerId !== this.pointerId) return;
     e.preventDefault();
-
     this.pointerId = null;
     this.active = false;
     this.value = 0;
-
     this.el.classList.remove('active');
     this.updateIndicator(0);
   }
 }
 
-/* å®ä¾‹åŒ– */
 const moveStick = new MoveStick(document.getElementById('moveStick'));
 const turnArea  = new TurnArea(
   document.getElementById('turnArea'),
@@ -1559,7 +1800,7 @@ const turnArea  = new TurnArea(
 );
 
 /* =========================================================
-   æ ‡è®° / é‡æ¥ æŒ‰é’®
+   ±ê¼Ç / ÖØÀ´ °´Å¥
    ========================================================= */
 const markBtn = document.getElementById('markBtn');
 if (markBtn) {
@@ -1594,7 +1835,435 @@ document.addEventListener('gesturestart', e => e.preventDefault());
 document.addEventListener('dblclick', e => e.preventDefault(), { passive: false });
 
 /* =========================================================
-   ä¸»å¾ªç¯
+   Áª»úÂß¼­ ¡ª¡ª CloudBase °æ±¾
+   ========================================================= */
+const netPanel = document.getElementById('netPanel');
+const netMenu  = document.getElementById('netMenu');
+const netRoom  = document.getElementById('netRoom');
+const netMenuStatus = document.getElementById('netMenuStatus');
+const roomCodeDisplay = document.getElementById('roomCodeDisplay');
+const playerCountEl = document.getElementById('playerCount');
+const playerListEl = document.getElementById('playerList');
+
+function setNetStatus(text, type) {
+  netMenuStatus.textContent = text || '';
+  netMenuStatus.className = 'net-status' + (type ? ' ' + type : '');
+}
+
+function openNetPanel() {
+  netPanel.classList.add('show');
+  setNetStatus('');
+
+  if (!window.fbReady) {
+    setNetStatus('ÕıÔÚ¼ÓÔØÁª»ú·şÎñ¡­');
+  } else if (window.fbError) {
+    setNetStatus(window.fbError, 'err');
+    document.getElementById('btnCreateRoom').disabled = true;
+    document.getElementById('btnJoinRoom').disabled = true;
+  } else {
+    document.getElementById('btnCreateRoom').disabled = false;
+    document.getElementById('btnJoinRoom').disabled = false;
+  }
+
+  if (NET.connected) {
+    netMenu.style.display = 'none';
+    netRoom.style.display = 'block';
+    roomCodeDisplay.textContent = NET.roomId;
+    updatePlayerListUI();
+  } else {
+    netMenu.style.display = 'block';
+    netRoom.style.display = 'none';
+  }
+}
+
+function closeNetPanel() {
+  netPanel.classList.remove('show');
+}
+
+function genRoomCode() {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let s = '';
+  for (let i = 0; i < 6; i++) s += chars[Math.floor(Math.random() * chars.length)];
+  return s;
+}
+
+async function createRoom() {
+  if (!window.fbReady || !tcbDb) {
+    setNetStatus('Áª»ú·şÎñÎ´¾ÍĞ÷', 'err');
+    return;
+  }
+
+  setNetStatus('ÕıÔÚ´´½¨·¿¼ä¡­');
+  const roomId = genRoomCode();
+  const seed = Math.floor(Math.random() * 1e9);
+
+  try {
+    await tcbDb.collection('rooms').doc(roomId).set({
+      data: {
+        seed,
+        difficulty: currentDiff,
+        level: 0,
+        phase: 'waiting',
+        hostId: NET.myId,
+        players: {
+          [NET.myId]: {
+            x: 1.5, y: 1.5, angle: 0, done: false,
+            name: '·¿Ö÷',
+            lastUpdate: Date.now()
+          }
+        },
+        marks: {},
+        createdAt: Date.now()
+      }
+    });
+
+    NET.roomId = roomId;
+    NET.isHost = true;
+    NET.connected = true;
+    setSeed(seed);
+
+    enterRoomUI();
+    attachRoomListener();
+
+    setNetStatus('·¿¼äÒÑ´´½¨', 'ok');
+  } catch (err) {
+    console.error(err);
+    setNetStatus('´´½¨Ê§°Ü£º' + (err.message || err), 'err');
+  }
+}
+
+async function joinRoom(code) {
+  if (!window.fbReady || !tcbDb) {
+    setNetStatus('Áª»ú·şÎñÎ´¾ÍĞ÷', 'err');
+    return;
+  }
+
+  code = (code || '').trim().toUpperCase();
+  if (code.length !== 6) { setNetStatus('·¿¼äÂë±ØĞëÊÇ 6 Î»', 'err'); return; }
+
+  setNetStatus('ÕıÔÚ¼ÓÈë¡­');
+
+  try {
+    const res = await tcbDb.collection('rooms').doc(code).get();
+    if (!res.data || res.data.length === 0) {
+      setNetStatus('·¿¼ä²»´æÔÚ', 'err');
+      return;
+    }
+    const data = res.data[0];
+
+    // °Ñ×Ô¼º¼ÓÈë players
+    const players = data.players || {};
+    players[NET.myId] = {
+      x: 1.5, y: 1.5, angle: 0, done: false,
+      name: NET.myName,
+      lastUpdate: Date.now()
+    };
+
+    await tcbDb.collection('rooms').doc(code).update({
+      data: { players }
+    });
+
+    NET.roomId = code;
+    NET.isHost = false;
+    NET.connected = true;
+
+    if (data.seed) setSeed(data.seed);
+    if (data.difficulty) applyDifficulty(data.difficulty);
+
+    enterRoomUI();
+    attachRoomListener();
+
+    setNetStatus('ÒÑ¼ÓÈë·¿¼ä', 'ok');
+  } catch (err) {
+    console.error(err);
+    setNetStatus('¼ÓÈëÊ§°Ü£º' + (err.message || err), 'err');
+  }
+}
+
+async function leaveRoom() {
+  // ´Ó·¿¼äÒÆ³ı×Ô¼º
+  if (NET.connected && tcbDb && NET.roomId) {
+    try {
+      const res = await tcbDb.collection('rooms').doc(NET.roomId).get();
+      if (res.data && res.data.length) {
+        const players = res.data[0].players || {};
+        delete players[NET.myId];
+
+        // Èç¹ûÊÇ·¿Ö÷ÇÒ·¿¼äÃ»ÈËÁË£¬Ö±½ÓÉ¾³ı·¿¼ä
+        if (NET.isHost && Object.keys(players).length === 0) {
+          await tcbDb.collection('rooms').doc(NET.roomId).remove();
+        } else {
+          await tcbDb.collection('rooms').doc(NET.roomId).update({
+            data: { players }
+          });
+        }
+      }
+    } catch(e) { console.warn('Àë¿ª·¿¼ä³ö´í:', e); }
+  }
+
+  detachRoomListener();
+
+  NET.roomId = null;
+  NET.isHost = false;
+  NET.connected = false;
+  roomHostId = null;
+  for (const k in otherPlayers) delete otherPlayers[k];
+  NET.playersSnapshot = {};
+  NET.marksSnapshot = {};
+
+  resetRandom();
+  closeNetPanel();
+  showMenu();
+}
+
+function enterRoomUI() {
+  netMenu.style.display = 'none';
+  netRoom.style.display = 'block';
+  roomCodeDisplay.textContent = NET.roomId;
+  updatePlayerListUI();
+}
+
+function updatePlayerListUI() {
+  const ids = [NET.myId, ...Object.keys(otherPlayers)];
+  playerCountEl.textContent = ids.length;
+
+  let html = '';
+  for (const id of ids) {
+    const isMe = id === NET.myId;
+    const name = isMe ? 'ÎÒ' : (otherPlayers[id] ? otherPlayers[id].name : 'Íæ¼Ò');
+    const isHost = id === roomHostId;
+    html += '<div class="net-player">' +
+      '<span class="' + (isMe ? 'me' : '') + '">' + name + '</span>' +
+      (isHost ? '<span class="host">·¿Ö÷</span>' : '') +
+    '</div>';
+  }
+  playerListEl.innerHTML = html;
+}
+
+/* =========================================================
+   ¼àÌı·¿¼ä±ä»¯£¨CloudBase watch£©
+   ========================================================= */
+function attachRoomListener() {
+  detachRoomListener();
+  if (!tcbDb || !NET.roomId) return;
+
+  try {
+    NET.watcher = tcbDb.collection('rooms').where({ _id: NET.roomId }).watch({
+      onChange: (snapshot) => {
+        if (!snapshot.docs || snapshot.docs.length === 0) return;
+        const data = snapshot.docs[0];
+        handleRoomUpdate(data);
+      },
+      onError: (err) => {
+        console.warn('·¿¼ä¼àÌı³ö´í:', err);
+        setNetStatus('Á¬½ÓÖĞ¶Ï£¬ÇëÖØÊÔ', 'err');
+      }
+    });
+  } catch (err) {
+    console.warn('ÎŞ·¨¼àÌı·¿¼ä:', err);
+    setNetStatus('¼àÌıÊ§°Ü£º' + (err.message || err), 'err');
+  }
+}
+
+function detachRoomListener() {
+  if (NET.watcher) {
+    try { NET.watcher.close(); } catch(e){}
+    NET.watcher = null;
+  }
+}
+
+function handleRoomUpdate(data) {
+  roomHostId = data.hostId;
+
+  // ---- Í¬²½±ê¼Ç ----
+  const remoteMarks = data.marks || {};
+  if (JSON.stringify(remoteMarks) !== JSON.stringify(NET.marksSnapshot)) {
+    marks = new Set(Object.keys(remoteMarks));
+    NET.marksSnapshot = remoteMarks;
+  }
+
+  // ---- Í¬²½ÆäËûÍæ¼Ò ----
+  const ps = data.players || {};
+  for (const pid in ps) {
+    if (pid === NET.myId) continue;
+    if (!otherPlayers[pid]) {
+      otherPlayers[pid] = { ...ps[pid] };
+    } else {
+      const op = otherPlayers[pid];
+      op.x = ps[pid].x;
+      op.y = ps[pid].y;
+      op.angle = ps[pid].angle;
+      op.done = ps[pid].done;
+      op.name = ps[pid].name;
+    }
+  }
+  for (const pid in otherPlayers) {
+    if (!ps[pid]) delete otherPlayers[pid];
+  }
+  NET.playersSnapshot = ps;
+  updatePlayerListUI();
+
+  // ---- ·Ç·¿Ö÷£ºÍ¬²½ÓÎÏ·½×¶Î ----
+  if (!NET.isHost && data.phase && data.phase !== phase) {
+    handleRemotePhase(data.phase, data.level);
+  }
+
+  // ---- ·Ç·¿Ö÷£ºÍ¬²½ÄÑ¶È£¨·ÀÖ¹ºó½øÀ´Ê±²»Ò»ÖÂ£©----
+  if (!NET.isHost && data.difficulty && data.difficulty !== currentDiff) {
+    applyDifficulty(data.difficulty);
+    if (data.seed && data.seed !== currentSeed) setSeed(data.seed);
+  }
+
+  // ---- ·¿Ö÷£º¼ì²éËùÓĞÈËÊÇ·ñÒÑµ½´ï³ö¿Ú ----
+  if (NET.isHost && phase === 'playing') {
+    const arr = Object.values(ps);
+    if (arr.length > 1 && arr.every(p => p.done)) {
+      hostNextLevel();
+    }
+  }
+}
+
+function handleRemotePhase(newPhase, newLevel) {
+  if (newPhase === 'countdown' && phase !== 'countdown') {
+    if (newLevel !== level) loadLevel(newLevel);
+    hideOverlay();
+    startCountdown();
+  } else if (newPhase === 'levelClear' && phase !== 'levelClear') {
+    showBig('¶Ó ÓÑ ÒÑ µ½ ´ï', 1200);
+  } else if (newPhase === 'allClear' && phase !== 'allClear') {
+    phase = 'allClear';
+    showAllClear();
+  }
+}
+
+/* =========================================================
+   ·¿Ö÷ÍÆ½ø¹Ø¿¨
+   ========================================================= */
+async function hostNextLevel() {
+  if (!NET.isHost || !tcbDb || !NET.roomId) return;
+  const nextLevel = level + 1;
+
+  if (nextLevel >= LEVELS.length) {
+    try {
+      await tcbDb.collection('rooms').doc(NET.roomId).update({
+        data: { phase: 'allClear' }
+      });
+    } catch(e){}
+    phase = 'allClear';
+    showAllClear();
+  } else {
+    try {
+      await tcbDb.collection('rooms').doc(NET.roomId).update({
+        data: { phase: 'levelClear', level: nextLevel }
+      });
+    } catch(e){}
+
+    showBig('CLEAR', 900);
+    setTimeout(async () => {
+      loadLevel(nextLevel);
+      try {
+        await tcbDb.collection('rooms').doc(NET.roomId).update({
+          data: { phase: 'countdown' }
+        });
+      } catch(e){}
+      startCountdown();
+    }, 1100);
+  }
+}
+
+/* =========================================================
+   CloudBase ·¿¼äÊôĞÔ / Íæ¼ÒÊôĞÔ¸üĞÂ
+   ========================================================= */
+async function updateRoomMeta(patch) {
+  if (!tcbDb || !NET.roomId) return;
+  try {
+    await tcbDb.collection('rooms').doc(NET.roomId).update({ data: patch });
+  } catch (err) {
+    console.warn('¸üĞÂ·¿¼äÔªÊı¾İÊ§°Ü:', err);
+  }
+}
+
+async function updateMyPlayer(patch) {
+  if (!tcbDb || !NET.roomId) return;
+  try {
+    const res = await tcbDb.collection('rooms').doc(NET.roomId).get();
+    if (!res.data || res.data.length === 0) return;
+    const players = res.data[0].players || {};
+    players[NET.myId] = Object.assign({}, players[NET.myId] || {}, patch);
+    await tcbDb.collection('rooms').doc(NET.roomId).update({
+      data: { players }
+    });
+  } catch (err) {
+    console.warn('¸üĞÂÍæ¼ÒÊı¾İÊ§°Ü:', err);
+  }
+}
+
+/* =========================================================
+   Î»ÖÃÍ¬²½
+   ========================================================= */
+function syncMyPosition(ts) {
+  if (!NET.connected || !tcbDb || !NET.roomId) return;
+  if (phase !== 'playing' && phase !== 'countdown') return;
+  if (ts - NET.lastSync < NET.syncInterval) return;
+  NET.lastSync = ts;
+
+  // ÓÃÄÚ´æÖĞµÄ players ¿ìÕÕ¸üĞÂ×Ô¼ºµÄÎ»ÖÃ£¬¼õÉÙÒ»´Î¶ÁÈ¡
+  const players = NET.playersSnapshot || {};
+  players[NET.myId] = {
+    x: player.x,
+    y: player.y,
+    angle: player.angle,
+    done: (phase === 'levelClear' || phase === 'allClear'),
+    name: NET.isHost ? '·¿Ö÷' : NET.myName,
+    lastUpdate: Date.now()
+  };
+
+  tcbDb.collection('rooms').doc(NET.roomId).update({
+    data: { players }
+  }).catch(() => {});
+}
+
+function smoothOtherPlayers(dt) {
+  const k = 1 - Math.exp(-9 * dt);
+  for (const id in otherPlayers) {
+    const op = otherPlayers[id];
+    if (op.renderX === undefined) {
+      op.renderX = op.x;
+      op.renderY = op.y;
+      op.renderAngle = op.angle;
+    }
+    op.renderX += (op.x - op.renderX) * k;
+    op.renderY += (op.y - op.renderY) * k;
+    let d = op.angle - op.renderAngle;
+    while (d > Math.PI) d -= TAU;
+    while (d < -Math.PI) d += TAU;
+    op.renderAngle += d * k;
+  }
+}
+
+/* =========================================================
+   °ó¶¨Áª»ú UI
+   ========================================================= */
+document.getElementById('btnCreateRoom').addEventListener('click', createRoom);
+document.getElementById('btnJoinRoom').addEventListener('click', () => {
+  joinRoom(document.getElementById('roomInput').value);
+});
+document.getElementById('btnLeaveRoom').addEventListener('click', leaveRoom);
+document.getElementById('btnNetClose').addEventListener('click', closeNetPanel);
+document.getElementById('btnCopyRoom').addEventListener('click', async () => {
+  try {
+    await navigator.clipboard.writeText(NET.roomId);
+    setNetStatus('·¿¼äÂëÒÑ¸´ÖÆ', 'ok');
+  } catch(e) {
+    setNetStatus('·¿¼äÂë£º' + NET.roomId, 'ok');
+  }
+});
+document.getElementById('roomInput').addEventListener('input', e => {
+  e.target.value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+});
+
+/* =========================================================
+   Ö÷Ñ­»·
    ========================================================= */
 let lastTs = 0;
 
@@ -1606,6 +2275,9 @@ function loop(ts) {
   dt = Math.min(dt, 0.05);
 
   updatePlayer(dt);
+
+  syncMyPosition(ts);
+  smoothOtherPlayers(dt);
 
   if (map.length > 0) {
     const rays = castRays();
@@ -1621,11 +2293,35 @@ function loop(ts) {
 }
 
 /* =========================================================
-   å¯åŠ¨
+   Æô¶¯
    ========================================================= */
 resizeCanvas();
 showMenu();
 requestAnimationFrame(loop);
+
+window.addEventListener('fb-ready', () => {
+  if (window.fbReady) {
+    NET.ready = true;
+    console.log('[Áª»ú] ¾ÍĞ÷£¬myId =', NET.myId);
+  } else {
+    console.warn('[Áª»ú] Î´¾ÍĞ÷£º' + window.fbError);
+  }
+});
+
+window.addEventListener('beforeunload', () => {
+  if (NET.connected && tcbDb && NET.roomId && !NET.isHost) {
+    try {
+      // ¾¡Á¦ÇåÀí£¨Í¬²½²Ù×÷¿ÉÄÜÎŞ·¨Íê³É£¬ÓÃ sendBeacon ²»ĞĞ£¬½ö×÷³¢ÊÔ£©
+      tcbDb.collection('rooms').doc(NET.roomId).get().then(res => {
+        if (res.data && res.data.length) {
+          const players = res.data[0].players || {};
+          delete players[NET.myId];
+          tcbDb.collection('rooms').doc(NET.roomId).update({ data: { players } });
+        }
+      });
+    } catch(e){}
+  }
+});
 
 })();
 </script>
