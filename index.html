@@ -1,0 +1,1633 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#000000">
+<link rel="manifest" href="./manifest.json">
+<title>迷宫 · MAZE</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{
+  width:100%;height:100%;overflow:hidden;position:fixed;
+  background:#0a0a0a;
+  font-family:"Courier New",Courier,"PingFang SC","Microsoft YaHei",monospace;
+  color:#e8e8e8;
+  user-select:none;-webkit-user-select:none;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:none;overscroll-behavior:none;
+}
+
+#screen{
+  position:absolute;inset:0;
+  background:#000;
+  overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+}
+
+canvas#game{
+  display:block;
+  width:100%;height:100%;
+  image-rendering:pixelated;
+  image-rendering:-moz-crisp-edges;
+  image-rendering:crisp-edges;
+}
+
+#scanlines{
+  position:absolute;inset:0;pointer-events:none;z-index:5;
+  background:repeating-linear-gradient(
+    0deg,
+    rgba(0,0,0,0) 0px,
+    rgba(0,0,0,0) 2px,
+    rgba(0,0,0,0.30) 3px,
+    rgba(0,0,0,0.30) 4px
+  );
+  mix-blend-mode:multiply;
+  opacity:0.85;
+}
+body.touch #scanlines{opacity:0.5;}
+
+#vignette{
+  position:absolute;inset:0;pointer-events:none;z-index:6;
+  background:radial-gradient(ellipse at center,
+    transparent 0%,
+    transparent 45%,
+    rgba(0,0,0,0.35) 75%,
+    rgba(0,0,0,0.80) 100%);
+}
+
+#glare{
+  position:absolute;inset:0;pointer-events:none;z-index:7;
+  background:linear-gradient(155deg,
+    rgba(255,255,255,0.05) 0%,
+    transparent 30%,
+    transparent 100%);
+}
+
+#hud{
+  position:absolute;inset:0;pointer-events:none;z-index:10;
+  padding:calc(env(safe-area-inset-top,0px) + 12px) 18px
+          calc(env(safe-area-inset-bottom,0px) + 12px);
+  display:flex;flex-direction:column;justify-content:space-between;
+}
+.hud-row{display:flex;justify-content:space-between;align-items:flex-start;}
+.hud-item{
+  font-size:12px;letter-spacing:2px;font-weight:700;color:#e8e8e8;
+  text-shadow:0 0 6px rgba(255,255,255,0.5);line-height:1.5;
+}
+.hud-item .k{
+  font-size:9px;color:#666;letter-spacing:1.5px;
+  display:block;text-shadow:none;
+}
+.hud-item .v{font-size:15px;font-variant-numeric:tabular-nums;}
+
+#hint{
+  position:absolute;bottom:calc(env(safe-area-inset-bottom,0px) + 14px);
+  left:0;right:0;text-align:center;
+  font-size:10.5px;letter-spacing:2px;color:#4a4a4a;
+  pointer-events:none;z-index:10;line-height:1.7;
+}
+body.touch #hint{display:none;}
+
+/* =========================================================
+   移动摇杆（左下，类和平精英）
+   ========================================================= */
+#moveStick{
+  display:none;
+  position:absolute;
+  left:calc(env(safe-area-inset-left,0px) + 24px);
+  bottom:calc(env(safe-area-inset-bottom,0px) + 28px);
+  width:140px;height:140px;
+  border-radius:50%;
+  background:rgba(255,255,255,0.035);
+  border:2px solid rgba(255,255,255,0.18);
+  z-index:20;
+  touch-action:none;
+  user-select:none;-webkit-user-select:none;
+  box-shadow:inset 0 0 24px rgba(255,255,255,0.04);
+  transition:border-color .15s,background .15s;
+}
+body.touch #moveStick{display:block;}
+#moveStick.active{
+  background:rgba(255,255,255,0.07);
+  border-color:rgba(255,255,255,0.42);
+}
+
+/* 十字准线 */
+#moveStick::before,
+#moveStick::after{
+  content:'';position:absolute;
+  background:rgba(255,255,255,0.07);pointer-events:none;
+}
+#moveStick::before{
+  left:18%;right:18%;top:50%;height:1px;transform:translateY(-50%);
+}
+#moveStick::after{
+  top:18%;bottom:18%;left:50%;width:1px;transform:translateX(-50%);
+}
+
+.stick-knob{
+  position:absolute;left:50%;top:50%;
+  width:56px;height:56px;border-radius:50%;
+  background:rgba(255,255,255,0.55);
+  transform:translate(-50%,-50%);
+  pointer-events:none;
+  box-shadow:0 0 16px rgba(255,255,255,0.25);
+  transition:background .1s,box-shadow .1s;
+  will-change:transform;
+}
+#moveStick.active .stick-knob{
+  background:#fff;
+  box-shadow:0 0 26px rgba(255,255,255,0.7);
+}
+
+#moveStick .stick-label{
+  position:absolute;bottom:-18px;left:0;right:0;
+  text-align:center;font-size:9px;letter-spacing:2px;
+  color:rgba(255,255,255,0.32);font-weight:700;pointer-events:none;
+}
+
+/* =========================================================
+   转向区域（右半屏，类和平精英滑屏转向）
+   ========================================================= */
+#turnArea{
+  display:none;
+  position:absolute;
+  right:0;
+  top:0;
+  bottom:0;
+  width:50%;
+  z-index:15;
+  touch-action:none;
+  user-select:none;-webkit-user-select:none;
+  pointer-events:auto;
+}
+body.touch #turnArea{display:block;}
+
+/* 转向激活时的视觉提示 */
+#turnArea::before{
+  content:'◀   转向   ▶';
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  font-size:11px;
+  letter-spacing:4px;
+  font-weight:700;
+  color:rgba(255,255,255,0.0);
+  pointer-events:none;
+  transition:color .2s;
+  white-space:nowrap;
+  font-family:"Courier New",monospace;
+  text-shadow:0 0 14px rgba(140,220,255,0);
+}
+#turnArea.active::before{
+  color:rgba(180,230,255,0.35);
+  text-shadow:0 0 14px rgba(140,220,255,0.6);
+}
+
+/* 转向方向指示条 */
+#turnIndicator{
+  display:none;
+  position:absolute;
+  left:50%;
+  bottom:calc(env(safe-area-inset-bottom,0px) + 200px);
+  transform:translateX(-50%);
+  width:120px;
+  height:4px;
+  background:rgba(255,255,255,0.1);
+  border-radius:2px;
+  z-index:22;
+  pointer-events:none;
+  overflow:hidden;
+}
+body.touch #turnIndicator{display:block;}
+#turnIndicator .fill{
+  position:absolute;
+  top:0;bottom:0;
+  left:50%;
+  width:0%;
+  background:linear-gradient(90deg,rgba(140,220,255,0.9),#fff);
+  border-radius:2px;
+  transition:width .08s linear,left .08s linear,background .1s;
+}
+#turnIndicator .center{
+  position:absolute;
+  left:50%;top:-3px;bottom:-3px;
+  width:1px;
+  background:rgba(255,255,255,0.4);
+  transform:translateX(-50%);
+}
+
+/* =========================================================
+   右侧按钮（在转向区域之上）
+   ========================================================= */
+#rightActions{
+  display:none;
+  position:absolute;
+  right:calc(env(safe-area-inset-right,0px) + 22px);
+  top:50%;
+  transform:translateY(-50%);
+  z-index:25;
+  flex-direction:column;
+  gap:14px;
+  pointer-events:none;
+}
+body.touch #rightActions{display:flex;}
+
+.action-btn{
+  width:64px;height:64px;
+  border-radius:50%;
+  background:rgba(255,255,255,0.06);
+  border:1.5px solid rgba(255,255,255,0.22);
+  color:rgba(255,255,255,0.72);
+  font-family:inherit;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:1px;
+  pointer-events:auto;cursor:pointer;padding:0;
+  -webkit-user-select:none;user-select:none;
+  transition:transform .1s,background .1s,border-color .1s,color .1s;
+  box-shadow:0 2px 12px rgba(0,0,0,0.3);
+}
+.action-btn:active,
+.action-btn.pressed{
+  background:rgba(255,255,255,0.9);
+  border-color:#fff;color:#000;
+  transform:scale(0.92);
+}
+.action-btn .symbol{font-size:20px;line-height:1;font-weight:900;}
+.action-btn .label{font-size:9px;font-weight:800;letter-spacing:1px;line-height:1;}
+
+/* =========================================================
+   遮罩
+   ========================================================= */
+#overlay{
+  position:absolute;inset:0;z-index:50;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(0,0,0,0.88);
+  padding:24px;transition:opacity .3s;overflow-y:auto;
+}
+#overlay.hide{opacity:0;pointer-events:none;}
+
+.card{
+  width:100%;max-width:340px;text-align:center;
+  padding:32px 24px 28px;
+  border:1.5px solid rgba(255,255,255,0.28);
+  background:#000;
+  box-shadow:0 0 40px rgba(255,255,255,0.08),inset 0 0 60px rgba(255,255,255,0.03);
+  animation:cardIn .35s ease-out;margin:auto;
+}
+@keyframes cardIn{
+  from{opacity:0;transform:scale(.94);}
+  to{opacity:1;transform:none;}
+}
+
+.card .icon{
+  font-size:32px;line-height:1;margin-bottom:14px;color:#fff;
+  text-shadow:0 0 18px rgba(255,255,255,0.7);letter-spacing:4px;
+}
+.card h1{
+  margin:0 0 12px;font-size:22px;letter-spacing:6px;font-weight:900;
+  color:#fff;text-shadow:0 0 14px rgba(255,255,255,0.55);
+}
+.card p{
+  margin:0 0 20px;font-size:12px;line-height:2;color:#888;letter-spacing:1px;
+}
+.card p .hl{color:#fff;font-weight:700;}
+
+.diff-title{
+  font-size:10px;color:#666;letter-spacing:3px;
+  margin-bottom:8px;font-weight:700;
+}
+.diff-select{
+  display:flex;margin-bottom:16px;
+  border:1.5px solid rgba(255,255,255,0.22);
+}
+.diff-btn{
+  flex:1;padding:11px 4px;background:transparent;color:#888;
+  border:none;border-right:1.5px solid rgba(255,255,255,0.22);
+  font-family:inherit;font-size:12px;font-weight:800;letter-spacing:1.5px;
+  cursor:pointer;transition:all .15s;
+  -webkit-user-select:none;user-select:none;
+}
+.diff-btn:last-child{border-right:none;}
+.diff-btn.active{background:#fff;color:#000;}
+.diff-btn:active{background:rgba(255,255,255,0.5);}
+
+.diff-info{
+  font-size:10.5px;color:#555;letter-spacing:1.5px;line-height:1.9;
+  margin-bottom:20px;min-height:34px;text-align:center;
+}
+
+.btn{
+  display:block;width:100%;
+  font:inherit;font-size:14px;font-weight:900;letter-spacing:4px;
+  padding:15px 20px;border-radius:0;
+  border:1.5px solid #fff;cursor:pointer;
+  color:#000;background:#fff;
+  transition:transform .1s,background .1s,color .1s;
+  touch-action:manipulation;
+}
+.btn:active{transform:scale(0.98);background:#000;color:#fff;}
+.btn.ghost{
+  background:transparent;color:#888;
+  border-color:rgba(255,255,255,0.25);
+  font-size:12px;padding:12px 20px;margin-top:10px;letter-spacing:3px;
+}
+.btn.ghost:active{background:rgba(255,255,255,0.08);color:#fff;transform:none;}
+
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 18px;}
+.stats.one{grid-template-columns:1fr;}
+.stat{border:1px solid rgba(255,255,255,0.15);padding:10px 6px;}
+.stat .k{font-size:9px;color:#666;letter-spacing:2px;margin-bottom:4px;font-weight:700;}
+.stat .v{font-size:16px;font-weight:900;color:#fff;font-variant-numeric:tabular-nums;letter-spacing:1px;}
+
+#bigText{
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  font-size:76px;font-weight:900;letter-spacing:10px;color:#fff;
+  text-shadow:0 0 30px rgba(255,255,255,0.9),0 0 60px rgba(255,255,255,0.4);
+  pointer-events:none;z-index:30;opacity:0;transition:opacity .2s;
+  font-family:"Courier New",monospace;
+}
+#bigText.show{opacity:1;}
+
+#dots{
+  position:absolute;top:calc(env(safe-area-inset-top,0px) + 42px);
+  left:0;right:0;text-align:center;z-index:10;pointer-events:none;
+  font-size:16px;letter-spacing:8px;color:#fff;
+  text-shadow:0 0 8px rgba(255,255,255,0.5);
+}
+
+#markHint{
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%) translateY(-46px);
+  font-size:11px;letter-spacing:3px;font-weight:800;color:#fff;
+  text-shadow:0 0 12px rgba(255,255,255,0.9);
+  pointer-events:none;opacity:0;z-index:28;transition:opacity .2s;
+  font-family:"Courier New",monospace;
+}
+#markHint.show{opacity:1;}
+
+/* =========================================================
+   横屏优化
+   ========================================================= */
+@media (orientation: landscape) {
+  #moveStick{
+    width:120px;height:120px;
+    left:calc(env(safe-area-inset-left,0px) + 18px);
+    bottom:calc(env(safe-area-inset-bottom,0px) + 18px);
+  }
+  .stick-knob{width:48px;height:48px;}
+  #moveStick .stick-label{font-size:8px;bottom:-14px;}
+
+  #rightActions{
+    right:calc(env(safe-area-inset-right,0px) + 18px);
+    gap:12px;
+  }
+  .action-btn{width:56px;height:56px;}
+  .action-btn .symbol{font-size:18px;}
+  .action-btn .label{font-size:8px;}
+
+  #turnIndicator{
+    bottom:calc(env(safe-area-inset-bottom,0px) + 160px);
+    width:100px;
+  }
+
+  #hud{
+    padding-top:calc(env(safe-area-inset-top,0px) + 8px);
+    padding-left:calc(env(safe-area-inset-left,0px) + 20px);
+    padding-right:calc(env(safe-area-inset-right,0px) + 20px);
+  }
+  .hud-item .v{font-size:14px;}
+  .hud-item .k{font-size:8px;}
+
+  #dots{
+    top:calc(env(safe-area-inset-top,0px) + 34px);
+    font-size:13px;letter-spacing:6px;
+  }
+
+  #bigText{font-size:62px;}
+}
+
+@media (orientation: landscape) and (max-height: 420px) {
+  #moveStick{width:104px;height:104px;}
+  .stick-knob{width:42px;height:42px;}
+  .action-btn{width:50px;height:50px;}
+  .action-btn .symbol{font-size:16px;}
+  .action-btn .label{font-size:7px;}
+  #turnIndicator{
+    bottom:calc(env(safe-area-inset-bottom,0px) + 140px);
+    width:90px;
+  }
+}
+
+@media(max-width:360px){
+  #moveStick{width:120px;height:120px;left:16px;}
+  .stick-knob{width:48px;height:48px;}
+  .action-btn{width:56px;height:56px;}
+  .action-btn .symbol{font-size:17px;}
+}
+</style>
+</head>
+<body>
+
+<div id="screen">
+  <canvas id="game"></canvas>
+  <div id="scanlines"></div>
+  <div id="vignette"></div>
+  <div id="glare"></div>
+
+  <div id="hud">
+    <div class="hud-row">
+      <div class="hud-item">
+        <span class="k">LEVEL</span>
+        <span class="v" id="hudLevel">1 / 3</span>
+      </div>
+      <div class="hud-item" style="text-align:right;">
+        <span class="k">TIME</span>
+        <span class="v" id="hudTime">00:00.0</span>
+      </div>
+    </div>
+    <div></div>
+  </div>
+
+  <div id="dots"></div>
+
+  <div id="hint">
+    W · S 前进 / 后退　　A · D 转向　　M 标记墙面　　R 重来
+  </div>
+
+  <!-- 转向区域：右半屏，透明，覆盖在画布上方 -->
+  <div id="turnArea"></div>
+
+  <!-- 转向指示条 -->
+  <div id="turnIndicator">
+    <div class="center"></div>
+    <div class="fill" id="turnFill"></div>
+  </div>
+
+  <!-- 移动摇杆：左下角，固定底座 -->
+  <div id="moveStick">
+    <div class="stick-knob"></div>
+    <div class="stick-label">移动</div>
+  </div>
+
+  <!-- 右侧按钮 -->
+  <div id="rightActions">
+    <button class="action-btn" id="markBtn">
+      <span class="symbol">✕</span>
+      <span class="label">标记</span>
+    </button>
+    <button class="action-btn" id="resetBtn">
+      <span class="symbol">↻</span>
+      <span class="label">重来</span>
+    </button>
+  </div>
+
+  <div id="bigText"></div>
+  <div id="markHint">已 标 记</div>
+
+  <div id="overlay">
+    <div class="card" id="card"></div>
+  </div>
+</div>
+
+<script>
+  // 在 index.html 的 <script> 中注册
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js')
+      .then(registration => console.log('SW registered:', registration))
+      .catch(err => console.log('SW registration failed:', err));
+  });
+}
+(function(){
+'use strict';
+
+/* =========================================================
+   工具
+   ========================================================= */
+const TAU = Math.PI * 2;
+const clamp = (v,a,b) => v < a ? a : v > b ? b : v;
+const pad2  = n => String(n).padStart(2,'0');
+
+const isTouch = matchMedia('(pointer: coarse)').matches ||
+                'ontouchstart' in window ||
+                navigator.maxTouchPoints > 0;
+if (isTouch) document.body.classList.add('touch');
+
+function fmtTime(sec) {
+  if (sec == null || !isFinite(sec)) return '00:00.0';
+  const m = Math.floor(sec / 60);
+  const s = Math.floor(sec % 60);
+  const d = Math.floor((sec * 10) % 10);
+  return pad2(m) + ':' + pad2(s) + '.' + d;
+}
+
+/* =========================================================
+   难度配置
+   ========================================================= */
+const DIFFICULTIES = {
+  easy: {
+    label: '简单', desc: '中等迷宫 · 移动快',
+    levels: [{ size: 15 }, { size: 19 }, { size: 23 }],
+    moveSpeed: 2.1, turnSpeed: 2.5
+  },
+  normal: {
+    label: '普通', desc: '大迷宫 · 标准速度',
+    levels: [{ size: 21 }, { size: 27 }, { size: 33 }],
+    moveSpeed: 1.75, turnSpeed: 2.1
+  },
+  hard: {
+    label: '困难', desc: '超大迷宫 · 移动慢',
+    levels: [{ size: 29 }, { size: 35 }, { size: 41 }],
+    moveSpeed: 1.45, turnSpeed: 1.85
+  }
+};
+
+let currentDiff = 'normal';
+let LEVELS = DIFFICULTIES.normal.levels;
+let MOVE_SPEED = DIFFICULTIES.normal.moveSpeed;
+let TURN_SPEED = DIFFICULTIES.normal.turnSpeed;
+
+function applyDifficulty(diff) {
+  currentDiff = diff;
+  const cfg = DIFFICULTIES[diff];
+  LEVELS = cfg.levels;
+  MOVE_SPEED = cfg.moveSpeed;
+  TURN_SPEED = cfg.turnSpeed;
+}
+
+/* =========================================================
+   画布
+   ========================================================= */
+const canvas = document.getElementById('game');
+const ctx = canvas.getContext('2d', { alpha: false });
+
+let logicW = 400;
+let logicH = 300;
+
+function resizeCanvas() {
+  const aspect = innerWidth / innerHeight;
+  logicH = 300;
+  logicW = Math.round(clamp(logicH * aspect, 260, 760));
+  canvas.width = logicW;
+  canvas.height = logicH;
+}
+window.addEventListener('resize', resizeCanvas);
+window.addEventListener('orientationchange', () => setTimeout(resizeCanvas, 120));
+resizeCanvas();
+
+/* =========================================================
+   状态
+   ========================================================= */
+let map = [];
+let marks = new Set();
+let MAP_W = 0;
+let MAP_H = 0;
+let exitCell = { x: 1, y: 1 };
+
+const player = { x: 1.5, y: 1.5, angle: 0, bob: 0 };
+
+let level = 0;
+let phase = 'menu';
+let levelStartTime = 0;
+let totalStartTime = 0;
+let levelTime = 0;
+let totalTime = 0;
+let bestTimes = [];
+
+const keys = { up: false, down: false, left: false, right: false };
+
+/* =========================================================
+   迷宫生成
+   ========================================================= */
+function generateMaze(size) {
+  let w = size, h = size;
+  if (w % 2 === 0) w++;
+  if (h % 2 === 0) h++;
+
+  MAP_W = w; MAP_H = h;
+
+  const m = Array.from({ length: h }, () => new Array(w).fill(1));
+  const stack = [[1, 1]];
+  m[1][1] = 0;
+
+  const dirs = [[0,-2],[0,2],[-2,0],[2,0]];
+
+  while (stack.length > 0) {
+    const [x, y] = stack[stack.length - 1];
+    const avail = [];
+    for (const [dx, dy] of dirs) {
+      const nx = x + dx, ny = y + dy;
+      if (nx > 0 && ny > 0 && nx < w - 1 && ny < h - 1 && m[ny][nx] === 1) {
+        avail.push([nx, ny, dx, dy]);
+      }
+    }
+    if (avail.length === 0) { stack.pop(); continue; }
+    const [nx, ny, dx, dy] = avail[Math.floor(Math.random() * avail.length)];
+    m[ny][nx] = 0;
+    m[y + dy / 2][x + dx / 2] = 0;
+    stack.push([nx, ny]);
+  }
+
+  for (let y = 2; y < h - 2; y++) {
+    for (let x = 2; x < w - 2; x++) {
+      if (m[y][x] === 1 && Math.random() < 0.08) {
+        const hOpen = m[y][x-1] === 0 && m[y][x+1] === 0;
+        const vOpen = m[y-1][x] === 0 && m[y+1][x] === 0;
+        if (hOpen || vOpen) m[y][x] = 0;
+      }
+    }
+  }
+
+  map = m;
+
+  const dist = bfs(1, 1);
+  let bestD = -1, ex = 1, ey = 1;
+  for (let y = 1; y < h - 1; y++) {
+    for (let x = 1; x < w - 1; x++) {
+      if (m[y][x] === 0 && dist[y][x] > bestD) {
+        bestD = dist[y][x]; ex = x; ey = y;
+      }
+    }
+  }
+  exitCell = { x: ex, y: ey };
+  marks = new Set();
+}
+
+function bfs(sx, sy) {
+  const dist = Array.from({ length: MAP_H }, () => new Array(MAP_W).fill(-1));
+  const q = [[sx, sy]];
+  dist[sy][sx] = 0;
+  const dirs = [[0,1],[0,-1],[1,0],[-1,0]];
+  let head = 0;
+  while (head < q.length) {
+    const [x, y] = q[head++];
+    for (const [dx, dy] of dirs) {
+      const nx = x + dx, ny = y + dy;
+      if (nx >= 0 && ny >= 0 && nx < MAP_W && ny < MAP_H &&
+          map[ny][nx] === 0 && dist[ny][nx] === -1) {
+        dist[ny][nx] = dist[y][x] + 1;
+        q.push([nx, ny]);
+      }
+    }
+  }
+  return dist;
+}
+
+function loadLevel(idx) {
+  level = idx;
+  generateMaze(LEVELS[idx].size);
+
+  player.x = 1.5; player.y = 1.5; player.bob = 0;
+
+  if (map[1][2] === 0) player.angle = 0;
+  else if (map[2][1] === 0) player.angle = Math.PI / 2;
+  else player.angle = 0;
+
+  levelTime = 0;
+  levelStartTime = performance.now();
+  updateHUD();
+  updateDots();
+}
+
+/* =========================================================
+   碰撞
+   ========================================================= */
+function circleHitsWall(x, y, r) {
+  const x0 = Math.floor(x - r), x1 = Math.floor(x + r);
+  const y0 = Math.floor(y - r), y1 = Math.floor(y + r);
+
+  for (let cy = y0; cy <= y1; cy++) {
+    for (let cx = x0; cx <= x1; cx++) {
+      if (cx < 0 || cy < 0 || cx >= MAP_W || cy >= MAP_H) return true;
+      if (map[cy][cx] !== 1) continue;
+      const nx = clamp(x, cx, cx + 1);
+      const ny = clamp(y, cy, cy + 1);
+      const dx = x - nx, dy = y - ny;
+      if (dx * dx + dy * dy < r * r) return true;
+    }
+  }
+  return false;
+}
+
+function tryMove(dx, dy) {
+  const r = 0.24;
+  const nx = player.x + dx, ny = player.y + dy;
+  if (!circleHitsWall(nx, player.y, r)) player.x = nx;
+  if (!circleHitsWall(player.x, ny, r)) player.y = ny;
+}
+
+/* =========================================================
+   射线投射
+   ========================================================= */
+let rayBuf = null;
+
+function castRays() {
+  const W = logicW;
+  if (!rayBuf || rayBuf.dist.length !== W) {
+    rayBuf = {
+      dist: new Float32Array(W), side: new Uint8Array(W),
+      face: new Uint8Array(W), key: new Int32Array(W),
+      cellX: new Int32Array(W), cellY: new Int32Array(W)
+    };
+  }
+
+  const dists = rayBuf.dist, sides = rayBuf.side, faces = rayBuf.face;
+  const keysArr = rayBuf.key, cellXs = rayBuf.cellX, cellYs = rayBuf.cellY;
+
+  const dirX = Math.cos(player.angle);
+  const dirY = Math.sin(player.angle);
+  const planeLen = 0.66;
+  const planeX = -dirY * planeLen;
+  const planeY = dirX * planeLen;
+
+  const playerX = player.x, playerY = player.y;
+
+  for (let x = 0; x < W; x++) {
+    const cameraX = 2 * x / W - 1;
+    const rayDirX = dirX + planeX * cameraX;
+    const rayDirY = dirY + planeY * cameraX;
+
+    let mapX = Math.floor(playerX), mapY = Math.floor(playerY);
+
+    const deltaDistX = rayDirX === 0 ? 1e30 : Math.abs(1 / rayDirX);
+    const deltaDistY = rayDirY === 0 ? 1e30 : Math.abs(1 / rayDirY);
+
+    let stepX, stepY, sideDistX, sideDistY;
+    if (rayDirX < 0) {
+      stepX = -1; sideDistX = (playerX - mapX) * deltaDistX;
+    } else {
+      stepX = 1; sideDistX = (mapX + 1 - playerX) * deltaDistX;
+    }
+    if (rayDirY < 0) {
+      stepY = -1; sideDistY = (playerY - mapY) * deltaDistY;
+    } else {
+      stepY = 1; sideDistY = (mapY + 1 - playerY) * deltaDistY;
+    }
+
+    let hit = 0, side = 0, guard = 0;
+    while (!hit && guard++ < 200) {
+      if (sideDistX < sideDistY) {
+        sideDistX += deltaDistX; mapX += stepX; side = 0;
+      } else {
+        sideDistY += deltaDistY; mapY += stepY; side = 1;
+      }
+      if (mapX < 0 || mapY < 0 || mapX >= MAP_W || mapY >= MAP_H) { hit = 1; break; }
+      if (map[mapY][mapX] === 1) hit = 1;
+    }
+
+    let perpDist = side === 0 ? sideDistX - deltaDistX : sideDistY - deltaDistY;
+    if (perpDist < 0.001) perpDist = 0.001;
+    if (perpDist > 60) perpDist = 60;
+
+    dists[x] = perpDist;
+    sides[x] = side;
+
+    let face = side === 0 ? (stepX > 0 ? 1 : 0) : (stepY > 0 ? 3 : 2);
+    faces[x] = face;
+
+    if (mapX < 0 || mapY < 0 || mapX >= MAP_W || mapY >= MAP_H) {
+      cellXs[x] = -1; cellYs[x] = -1; keysArr[x] = -1;
+    } else {
+      cellXs[x] = mapX; cellYs[x] = mapY;
+      keysArr[x] = ((mapY * 2048 + mapX) * 4 + face);
+    }
+  }
+
+  return { dists, sides, faces, keys: keysArr, cellXs, cellYs, dirX, dirY, planeX, planeY };
+}
+
+/* =========================================================
+   渲染
+   ========================================================= */
+function render(rays) {
+  const W = logicW, H = logicH, halfH = H * 0.5;
+  ctx.fillStyle = '#000';
+  ctx.fillRect(0, 0, W, H);
+
+  const projScale = H * 0.78;
+  const tops = new Float32Array(W);
+  const bots = new Float32Array(W);
+  const alphas = new Float32Array(W);
+
+  for (let x = 0; x < W; x++) {
+    const d = rays.dists[x];
+    const wh = projScale / d;
+    let t = halfH - wh / 2, b = halfH + wh / 2;
+    if (t < 0) t = 0;
+    if (b > H) b = H;
+    tops[x] = t; bots[x] = b;
+    let a = 1.0 - d * 0.055;
+    if (a < 0.18) a = 0.18;
+    if (a > 1) a = 1;
+    alphas[x] = a;
+  }
+
+  ctx.strokeStyle = '#ffffff';
+  ctx.lineWidth = 1;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+
+  let segStart = 0;
+  let curKey = rays.keys[0];
+
+  for (let x = 1; x <= W; x++) {
+    const isEnd = (x === W) || (rays.keys[x] !== curKey);
+    if (!isEnd) continue;
+
+    const x0 = segStart, x1 = x - 1;
+    let sumA = 0;
+    for (let i = x0; i <= x1; i++) sumA += alphas[i];
+    const avgA = sumA / (x1 - x0 + 1);
+    const width = x1 - x0 + 1;
+    const a = width <= 2 ? Math.min(1, avgA * 1.15) : avgA;
+
+    ctx.globalAlpha = a;
+
+    ctx.beginPath();
+    for (let i = x0; i <= x1; i++) {
+      const px = i + 0.5;
+      if (i === x0) ctx.moveTo(px, tops[i]); else ctx.lineTo(px, tops[i]);
+    }
+    ctx.stroke();
+
+    ctx.beginPath();
+    for (let i = x0; i <= x1; i++) {
+      const px = i + 0.5;
+      if (i === x0) ctx.moveTo(px, bots[i]); else ctx.lineTo(px, bots[i]);
+    }
+    ctx.stroke();
+
+    const lx = x0 + 0.5;
+    ctx.beginPath();
+    ctx.moveTo(lx, tops[x0]); ctx.lineTo(lx, bots[x0]);
+    ctx.stroke();
+
+    const rx = x1 + 0.5;
+    ctx.beginPath();
+    ctx.moveTo(rx, tops[x1]); ctx.lineTo(rx, bots[x1]);
+    ctx.stroke();
+
+    ctx.globalAlpha = 1;
+
+    const midCol = (x0 + x1) >> 1;
+    const gx = rays.cellXs[midCol];
+    const gy = rays.cellYs[midCol];
+    const gf = rays.faces[midCol];
+
+    if (gx >= 0 && gy >= 0) {
+      const mKey = gx + ',' + gy + ',' + gf;
+      if (marks.has(mKey)) {
+        const dHere = rays.dists[midCol];
+        if (dHere < 22) {
+          let markAlpha = 1.0 - dHere * 0.03;
+          if (markAlpha < 0.32) markAlpha = 0.32;
+          if (markAlpha > 1) markAlpha = 1;
+          const pulse = 0.72 + 0.28 * Math.sin(performance.now() / 280);
+          const midX = (x0 + x1) / 2 + 0.5;
+          const midY = (tops[midCol] + bots[midCol]) / 2;
+          const h = Math.min((bots[midCol] - tops[midCol]) * 0.24, width * 0.75, 20);
+          if (h >= 1.8) {
+            ctx.globalAlpha = markAlpha * pulse;
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = Math.max(1, h * 0.22);
+            ctx.beginPath();
+            ctx.moveTo(midX - h, midY - h);
+            ctx.lineTo(midX + h, midY + h);
+            ctx.moveTo(midX + h, midY - h);
+            ctx.lineTo(midX - h, midY + h);
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+          }
+        }
+      }
+    }
+
+    if (x < W) { segStart = x; curKey = rays.keys[x]; }
+  }
+
+  renderExit(rays);
+
+  const cx = Math.round(W / 2), cy = Math.round(H / 2);
+  ctx.globalAlpha = 0.55;
+  ctx.strokeStyle = '#ffffff';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(cx - 4, cy); ctx.lineTo(cx - 1, cy);
+  ctx.moveTo(cx + 1, cy); ctx.lineTo(cx + 4, cy);
+  ctx.moveTo(cx, cy - 4); ctx.lineTo(cx, cy - 1);
+  ctx.moveTo(cx, cy + 1); ctx.lineTo(cx, cy + 4);
+  ctx.stroke();
+  ctx.globalAlpha = 1;
+}
+
+function renderExit(rays) {
+  const W = logicW, H = logicH, halfH = H * 0.5;
+  const projScale = H * 0.78;
+
+  const ex = exitCell.x + 0.5, ey = exitCell.y + 0.5;
+  const relX = ex - player.x, relY = ey - player.y;
+
+  const invDet = 1 / (rays.planeX * rays.dirY - rays.dirX * rays.planeY);
+  const transX = invDet * (rays.dirY * relX - rays.dirX * relY);
+  const transY = invDet * (-rays.planeY * relX + rays.planeX * relY);
+
+  if (transY <= 0.15) return;
+  const screenX = (W / 2) * (1 + transX / transY);
+  if (screenX < -80 || screenX > W + 80) return;
+
+  const col = clamp(Math.round(screenX), 0, W - 1);
+  if (transY > rays.dists[col] + 0.3) return;
+
+  const spriteH = (projScale / transY) * 0.62;
+  const spriteW = spriteH;
+  const cx = screenX, cy = halfH + spriteH * 0.05;
+  const hw = spriteW / 2, hh = spriteH / 2;
+  if (hw < 1) return;
+
+  let a = 1.0 - transY * 0.05;
+  if (a < 0.25) a = 0.25;
+  if (a > 1) a = 1;
+
+  const blink = 0.72 + 0.28 * Math.sin(performance.now() / 190);
+  ctx.globalAlpha = a * blink;
+  ctx.strokeStyle = '#ffffff';
+  ctx.lineWidth = Math.max(1, spriteW * 0.035);
+
+  ctx.strokeRect(cx - hw, cy - hh, spriteW, spriteH);
+
+  ctx.beginPath();
+  ctx.moveTo(cx, cy - hh * 0.55);
+  ctx.lineTo(cx + hw * 0.55, cy);
+  ctx.lineTo(cx, cy + hh * 0.55);
+  ctx.lineTo(cx - hw * 0.55, cy);
+  ctx.closePath();
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.arc(cx, cy, Math.max(1, spriteW * 0.05), 0, TAU);
+  ctx.fillStyle = '#ffffff';
+  ctx.fill();
+  ctx.globalAlpha = 1;
+}
+
+/* =========================================================
+   玩家更新
+   ========================================================= */
+function updatePlayer(dt) {
+  if (phase !== 'playing') return;
+
+  let moveF = 0, moveS = 0, turnInput = 0;
+
+  // 键盘
+  if (keys.up)    moveF += 1;
+  if (keys.down)  moveF -= 1;
+  if (keys.left)  turnInput -= 1;
+  if (keys.right) turnInput += 1;
+
+  // 移动摇杆（类和平精英：从触摸点算偏移）
+  if (moveStick.active) {
+    moveF = -moveStick.ny;
+    moveS = moveStick.nx;
+  }
+
+  // 转向区域（类和平精英：滑屏转向）
+  if (turnArea.active) {
+    turnInput = turnArea.value;
+  }
+
+  moveF = clamp(moveF, -1, 1);
+  moveS = clamp(moveS, -1, 1);
+  turnInput = clamp(turnInput, -1, 1);
+
+  // 移动
+  if (Math.abs(moveF) > 0.001 || Math.abs(moveS) > 0.001) {
+    const fx = Math.cos(player.angle), fy = Math.sin(player.angle);
+    const rx = -Math.sin(player.angle), ry = Math.cos(player.angle);
+
+    let mlen = Math.hypot(moveF, moveS);
+    if (mlen > 1) { moveF /= mlen; moveS /= mlen; mlen = 1; }
+
+    const dx = (fx * moveF + rx * moveS) * MOVE_SPEED * dt;
+    const dy = (fy * moveF + ry * moveS) * MOVE_SPEED * dt;
+    tryMove(dx, dy);
+    player.bob += dt * 8 * mlen;
+  } else {
+    player.bob *= Math.exp(-6 * dt);
+  }
+
+  // 转向
+  if (Math.abs(turnInput) > 0.001) {
+    player.angle += turnInput * TURN_SPEED * dt;
+    if (player.angle < 0) player.angle += TAU;
+    if (player.angle >= TAU) player.angle -= TAU;
+  }
+
+  const now = performance.now();
+  levelTime = (now - levelStartTime) / 1000;
+  totalTime = (now - totalStartTime) / 1000;
+
+  const px = Math.floor(player.x), py = Math.floor(player.y);
+  if (px === exitCell.x && py === exitCell.y) onReachExit();
+}
+
+/* =========================================================
+   标记系统
+   ========================================================= */
+function findAimedWall() {
+  const rayDirX = Math.cos(player.angle);
+  const rayDirY = Math.sin(player.angle);
+
+  let mapX = Math.floor(player.x), mapY = Math.floor(player.y);
+  const deltaDistX = rayDirX === 0 ? 1e30 : Math.abs(1 / rayDirX);
+  const deltaDistY = rayDirY === 0 ? 1e30 : Math.abs(1 / rayDirY);
+
+  let stepX, stepY, sideDistX, sideDistY;
+  if (rayDirX < 0) {
+    stepX = -1; sideDistX = (player.x - mapX) * deltaDistX;
+  } else {
+    stepX = 1; sideDistX = (mapX + 1 - player.x) * deltaDistX;
+  }
+  if (rayDirY < 0) {
+    stepY = -1; sideDistY = (player.y - mapY) * deltaDistY;
+  } else {
+    stepY = 1; sideDistY = (mapY + 1 - player.y) * deltaDistY;
+  }
+
+  let side = 0;
+  for (let guard = 0; guard < 200; guard++) {
+    if (sideDistX < sideDistY) {
+      sideDistX += deltaDistX; mapX += stepX; side = 0;
+    } else {
+      sideDistY += deltaDistY; mapY += stepY; side = 1;
+    }
+    if (mapX < 0 || mapY < 0 || mapX >= MAP_W || mapY >= MAP_H) return null;
+    if (map[mapY][mapX] === 1) {
+      let face = side === 0 ? (stepX > 0 ? 1 : 0) : (stepY > 0 ? 3 : 2);
+      return { x: mapX, y: mapY, face };
+    }
+  }
+  return null;
+}
+
+function toggleMark() {
+  if (phase !== 'playing') return;
+  const cell = findAimedWall();
+  if (!cell) return;
+
+  const key = cell.x + ',' + cell.y + ',' + cell.face;
+  if (marks.has(key)) {
+    marks.delete(key);
+    playBeep(500, 0.05, 0.04);
+    showMarkHint('取 消 标 记');
+  } else {
+    marks.add(key);
+    playBeep(1200, 0.05, 0.05);
+    showMarkHint('已 标 记');
+  }
+
+  const btn = document.getElementById('markBtn');
+  if (btn) {
+    btn.classList.add('pressed');
+    setTimeout(() => btn.classList.remove('pressed'), 120);
+  }
+}
+
+const markHintEl = document.getElementById('markHint');
+let markHintTimer = null;
+function showMarkHint(text) {
+  markHintEl.textContent = text;
+  markHintEl.classList.add('show');
+  if (markHintTimer) clearTimeout(markHintTimer);
+  markHintTimer = setTimeout(() => markHintEl.classList.remove('show'), 700);
+}
+
+/* =========================================================
+   关卡完成 / 倒计时 / 音效
+   ========================================================= */
+function onReachExit() {
+  if (phase !== 'playing') return;
+  phase = 'levelClear';
+  bestTimes[level] = Math.min(bestTimes[level] ?? Infinity, levelTime);
+  playBeep(880, 0.08, 0.06);
+
+  const isLast = level >= LEVELS.length - 1;
+  if (isLast) {
+    phase = 'allClear';
+    setTimeout(() => playBeep(1320, 0.12, 0.08), 120);
+    setTimeout(showAllClear, 700);
+  } else {
+    showBig('CLEAR', 900);
+    setTimeout(() => {
+      loadLevel(level + 1);
+      startCountdown();
+    }, 1100);
+  }
+}
+
+function startCountdown() {
+  phase = 'countdown';
+  const seq = [
+    { txt: '3', ms: 550 }, { txt: '2', ms: 550 },
+    { txt: '1', ms: 550 }, { txt: 'GO', ms: 600 }
+  ];
+  let i = 0;
+  function step() {
+    if (i >= seq.length) {
+      hideBig();
+      phase = 'playing';
+      levelStartTime = performance.now();
+      levelTime = 0;
+      return;
+    }
+    const s = seq[i++];
+    showBig(s.txt, s.ms);
+    playBeep(s.txt === 'GO' ? 880 : 440, 0.06, 0.05);
+    setTimeout(step, s.ms);
+  }
+  step();
+}
+
+let audioCtx = null;
+function initAudio() {
+  if (audioCtx) return;
+  try {
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (AC) audioCtx = new AC();
+  } catch (e) {}
+}
+function playBeep(freq, dur, vol) {
+  if (!audioCtx) return;
+  try {
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = 'square';
+    osc.frequency.value = freq;
+    gain.gain.value = vol || 0.05;
+    gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + dur);
+    osc.connect(gain); gain.connect(audioCtx.destination);
+    osc.start(); osc.stop(audioCtx.currentTime + dur);
+  } catch (e) {}
+}
+
+/* =========================================================
+   HUD / 大文字 / 遮罩
+   ========================================================= */
+const hudLevelEl = document.getElementById('hudLevel');
+const hudTimeEl  = document.getElementById('hudTime');
+const dotsEl     = document.getElementById('dots');
+
+function updateHUD() {
+  hudLevelEl.textContent = (level + 1) + ' / ' + LEVELS.length;
+}
+function updateDots() {
+  let s = '';
+  for (let i = 0; i < LEVELS.length; i++) {
+    s += i <= level ? '●' : '○';
+    if (i < LEVELS.length - 1) s += ' ';
+  }
+  dotsEl.innerHTML = s;
+}
+function updateTimeHUD() {
+  hudTimeEl.textContent = fmtTime(levelTime);
+}
+
+const bigTextEl = document.getElementById('bigText');
+let bigTimer = null;
+function showBig(text, ms) {
+  bigTextEl.textContent = text;
+  bigTextEl.classList.add('show');
+  if (bigTimer) clearTimeout(bigTimer);
+  if (ms) bigTimer = setTimeout(() => bigTextEl.classList.remove('show'), ms);
+}
+function hideBig() { bigTextEl.classList.remove('show'); }
+
+const overlay = document.getElementById('overlay');
+const card = document.getElementById('card');
+
+function showOverlay(html) {
+  card.innerHTML = html;
+  overlay.classList.remove('hide');
+  bindOverlayEvents();
+}
+function hideOverlay() { overlay.classList.add('hide'); }
+
+function bindOverlayEvents() {
+  card.querySelectorAll('.diff-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const diff = btn.dataset.diff;
+      applyDifficulty(diff);
+      card.querySelectorAll('.diff-btn').forEach(b => {
+        b.classList.toggle('active', b.dataset.diff === diff);
+      });
+      const info = card.querySelector('.diff-info');
+      if (info) info.textContent = DIFFICULTIES[diff].desc;
+    });
+  });
+
+  const btnStart = card.querySelector('#btnStart');
+  if (btnStart) btnStart.addEventListener('click', startGame);
+
+  const btnAgain = card.querySelector('#btnAgain');
+  if (btnAgain) btnAgain.addEventListener('click', () => {
+    hideOverlay();
+    totalStartTime = performance.now();
+    totalTime = 0;
+    bestTimes = [];
+    loadLevel(0);
+    startCountdown();
+  });
+
+  const btnMenu = card.querySelector('#btnMenu');
+  if (btnMenu) btnMenu.addEventListener('click', showMenu);
+}
+
+function showMenu() {
+  phase = 'menu';
+  const diffKeys = ['easy', 'normal', 'hard'];
+  const diffButtons = diffKeys.map(k => {
+    const cfg = DIFFICULTIES[k];
+    const active = (k === currentDiff) ? ' active' : '';
+    return `<button class="diff-btn${active}" data-diff="${k}">${cfg.label}</button>`;
+  }).join('');
+
+  showOverlay(`
+    <div class="icon">▶</div>
+    <h1>迷 宫</h1>
+    <p>
+      找到闪烁的出口标记<br>
+      穿过 <span class="hl">${LEVELS.length} 层</span> 迷宫抵达终点
+    </p>
+
+    <div class="diff-title">选 择 难 度</div>
+    <div class="diff-select">
+      ${diffButtons}
+    </div>
+    <div class="diff-info">${DIFFICULTIES[currentDiff].desc}</div>
+
+    <button class="btn" id="btnStart">开 始</button>
+
+    <div style="margin-top:16px;font-size:10px;color:#555;letter-spacing:2px;line-height:1.9;">
+      <div>键盘：W/S 前后 · A/D 转向 · M 标记</div>
+      <div style="margin-top:6px;color:#444;">触屏：左摇杆移动 · 右半屏滑屏转向</div>
+      <div style="color:#444;">支持横屏与竖屏</div>
+    </div>
+  `);
+}
+
+function startGame() {
+  initAudio();
+  hideOverlay();
+  totalStartTime = performance.now();
+  totalTime = 0;
+  bestTimes = [];
+  loadLevel(0);
+  startCountdown();
+}
+
+function showAllClear() {
+  let rows = '';
+  for (let i = 0; i < LEVELS.length; i++) {
+    rows += `
+      <div class="stat">
+        <div class="k">第 ${i + 1} 关</div>
+        <div class="v">${fmtTime(bestTimes[i] ?? 0)}</div>
+      </div>
+    `;
+  }
+
+  showOverlay(`
+    <div class="icon">★</div>
+    <h1>全 部 通 关</h1>
+    <p>难度：<span class="hl">${DIFFICULTIES[currentDiff].label}</span></p>
+    <div class="stats">${rows}</div>
+    <div class="stats one">
+      <div class="stat">
+        <div class="k">总时间</div>
+        <div class="v">${fmtTime(totalTime)}</div>
+      </div>
+    </div>
+    <button class="btn" id="btnAgain">再 来 一 次</button>
+    <button class="btn ghost" id="btnMenu">返回标题</button>
+  `);
+}
+
+/* =========================================================
+   键盘
+   ========================================================= */
+function handleKey(e, isDown) {
+  const k = e.key.toLowerCase();
+  let handled = false;
+  if (k === 'w' || k === 'arrowup')    { keys.up = isDown;    handled = true; }
+  if (k === 's' || k === 'arrowdown')  { keys.down = isDown;  handled = true; }
+  if (k === 'a' || k === 'arrowleft')  { keys.left = isDown;  handled = true; }
+  if (k === 'd' || k === 'arrowright') { keys.right = isDown; handled = true; }
+
+  if (k === 'm' && isDown) { toggleMark(); handled = true; }
+  if (k === 'r' && isDown && phase !== 'countdown') {
+    loadLevel(level);
+    startCountdown();
+    handled = true;
+  }
+  if (handled) e.preventDefault();
+}
+
+window.addEventListener('keydown', e => { initAudio(); handleKey(e, true); });
+window.addEventListener('keyup', e => handleKey(e, false));
+window.addEventListener('blur', () => {
+  keys.up = keys.down = keys.left = keys.right = false;
+});
+
+/* =========================================================
+   ★ 移动摇杆（类和平精英）
+   ---------------------------------------------------------
+   逻辑：
+   1. 触摸底座区域内任意位置 → 该点成为「原点」
+   2. 手指从原点拖拽 → 产生移动方向与力度
+   3. 松手或移出 → 立刻归零
+   4. 支持多点触控（同时按住移动 + 转向）
+   ========================================================= */
+class MoveStick {
+  constructor(baseEl) {
+    this.baseEl = baseEl;
+    this.knobEl = baseEl.querySelector('.stick-knob');
+    this.pointerId = null;
+    this.active = false;
+
+    this.nx = 0;
+    this.ny = 0;
+
+    this.originX = 0;
+    this.originY = 0;
+
+    this.maxDist = 50;      // 从原点算起的最大拖拽距离
+    this.deadZone = 7;      // 死区像素
+
+    baseEl.addEventListener('pointerdown', e => this.onDown(e), { passive: false });
+    document.addEventListener('pointermove', e => this.onMove(e), { passive: false });
+    document.addEventListener('pointerup', e => this.onUp(e), { passive: false });
+    document.addEventListener('pointercancel', e => this.onUp(e), { passive: false });
+    baseEl.addEventListener('contextmenu', e => e.preventDefault());
+  }
+
+  onDown(e) {
+    if (this.pointerId !== null) return;
+
+    // 检查触摸是否在底座范围内（稍微放宽）
+    const rect = this.baseEl.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    const r = rect.width / 2;
+
+    const d = Math.hypot(e.clientX - cx, e.clientY - cy);
+    if (d > r * 1.4) return;  // 太远，忽略
+
+    e.preventDefault();
+    e.stopPropagation();
+
+    this.pointerId = e.pointerId;
+    try { this.baseEl.setPointerCapture(e.pointerId); } catch (err) {}
+
+    // ★ 以触摸点为原点（和平精英式）
+    this.originX = e.clientX;
+    this.originY = e.clientY;
+
+    this.active = true;
+    this.nx = 0;
+    this.ny = 0;
+
+    this.baseEl.classList.add('active');
+    this.updateKnob(0, 0);
+  }
+
+  onMove(e) {
+    if (e.pointerId !== this.pointerId) return;
+    e.preventDefault();
+
+    const dx = e.clientX - this.originX;
+    const dy = e.clientY - this.originY;
+    const dist = Math.hypot(dx, dy);
+
+    if (dist < this.deadZone) {
+      this.nx = 0;
+      this.ny = 0;
+    } else {
+      const clamped = Math.min(dist, this.maxDist);
+      const norm = clamped / this.maxDist;
+      this.nx = (dx / dist) * norm;
+      this.ny = (dy / dist) * norm;
+    }
+
+    this.updateKnob(dx, dy);
+  }
+
+  updateKnob(dx, dy) {
+    const rect = this.baseEl.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+
+    // 旋钮位置 = 触摸实际位置，相对底座中心
+    let kx = (this.originX + dx) - cx;
+    let ky = (this.originY + dy) - cy;
+
+    const maxR = rect.width / 2 - 22;
+    const kd = Math.hypot(kx, ky);
+    if (kd > maxR) {
+      kx = kx / kd * maxR;
+      ky = ky / kd * maxR;
+    }
+
+    this.knobEl.style.transform =
+      `translate(calc(-50% + ${kx}px), calc(-50% + ${ky}px))`;
+  }
+
+  onUp(e) {
+    if (e.pointerId !== this.pointerId) return;
+    e.preventDefault();
+
+    this.pointerId = null;
+    this.active = false;
+    this.nx = 0;
+    this.ny = 0;
+
+    this.baseEl.classList.remove('active');
+    this.knobEl.style.transform = 'translate(-50%, -50%)';
+  }
+}
+
+/* =========================================================
+   ★ 转向区域（类和平精英滑屏转向）
+   ---------------------------------------------------------
+   逻辑：
+   1. 触摸右半屏任意位置 → 记录起始 X 坐标
+   2. 手指水平滑动 → 滑动距离映射为转向力度
+   3. 松手 → 立刻停止转向
+   4. 转动力度实时显示在屏幕中央的指示条上
+   ========================================================= */
+class TurnArea {
+  constructor(el, indicatorFill) {
+    this.el = el;
+    this.indicatorFill = indicatorFill;
+
+    this.pointerId = null;
+    this.active = false;
+    this.originX = 0;
+    this.value = 0;      // [-1, 1]
+
+    this.maxDist = 100;  // 达到最大转向力度的滑动距离
+    this.deadZone = 14;  // 死区
+
+    el.addEventListener('pointerdown', e => this.onDown(e), { passive: false });
+    document.addEventListener('pointermove', e => this.onMove(e), { passive: false });
+    document.addEventListener('pointerup', e => this.onUp(e), { passive: false });
+    document.addEventListener('pointercancel', e => this.onUp(e), { passive: false });
+    el.addEventListener('contextmenu', e => e.preventDefault());
+  }
+
+  onDown(e) {
+    if (this.pointerId !== null) return;
+
+    e.preventDefault();
+    e.stopPropagation();
+
+    this.pointerId = e.pointerId;
+    try { this.el.setPointerCapture(e.pointerId); } catch (err) {}
+
+    this.originX = e.clientX;
+    this.active = true;
+    this.value = 0;
+
+    this.el.classList.add('active');
+    this.updateIndicator(0);
+  }
+
+  onMove(e) {
+    if (e.pointerId !== this.pointerId) return;
+    e.preventDefault();
+
+    const dx = e.clientX - this.originX;
+
+    if (Math.abs(dx) < this.deadZone) {
+      this.value = 0;
+    } else {
+      const sign = Math.sign(dx);
+      const mag = Math.min(1, (Math.abs(dx) - this.deadZone) / (this.maxDist - this.deadZone));
+      this.value = sign * mag;
+    }
+
+    this.updateIndicator(dx);
+  }
+
+  updateIndicator(dx) {
+    if (!this.indicatorFill) return;
+    const half = 60; // 指示条半宽
+    const clamped = clamp(dx / this.maxDist, -1, 1);
+    const w = Math.abs(clamped) * half;
+
+    if (clamped < 0) {
+      this.indicatorFill.style.left = (50 - (w / 120) * 100) + '%';
+      this.indicatorFill.style.width = (w / 120) * 100 + '%';
+    } else {
+      this.indicatorFill.style.left = '50%';
+      this.indicatorFill.style.width = (w / 120) * 100 + '%';
+    }
+  }
+
+  onUp(e) {
+    if (e.pointerId !== this.pointerId) return;
+    e.preventDefault();
+
+    this.pointerId = null;
+    this.active = false;
+    this.value = 0;
+
+    this.el.classList.remove('active');
+    this.updateIndicator(0);
+  }
+}
+
+/* 实例化 */
+const moveStick = new MoveStick(document.getElementById('moveStick'));
+const turnArea  = new TurnArea(
+  document.getElementById('turnArea'),
+  document.getElementById('turnFill')
+);
+
+/* =========================================================
+   标记 / 重来 按钮
+   ========================================================= */
+const markBtn = document.getElementById('markBtn');
+if (markBtn) {
+  markBtn.addEventListener('pointerdown', e => {
+    e.preventDefault();
+    e.stopPropagation();
+    initAudio();
+    toggleMark();
+  });
+  markBtn.addEventListener('contextmenu', e => e.preventDefault());
+}
+
+const resetBtn = document.getElementById('resetBtn');
+if (resetBtn) {
+  resetBtn.addEventListener('pointerdown', e => {
+    e.preventDefault();
+    e.stopPropagation();
+    initAudio();
+    resetBtn.classList.add('pressed');
+    if (phase !== 'countdown') {
+      loadLevel(level);
+      startCountdown();
+    }
+    setTimeout(() => resetBtn.classList.remove('pressed'), 120);
+  });
+  resetBtn.addEventListener('contextmenu', e => e.preventDefault());
+}
+
+canvas.addEventListener('touchstart', e => e.preventDefault(), { passive: false });
+canvas.addEventListener('touchmove',  e => e.preventDefault(), { passive: false });
+document.addEventListener('gesturestart', e => e.preventDefault());
+document.addEventListener('dblclick', e => e.preventDefault(), { passive: false });
+
+/* =========================================================
+   主循环
+   ========================================================= */
+let lastTs = 0;
+
+function loop(ts) {
+  if (!lastTs) lastTs = ts;
+  let dt = (ts - lastTs) / 1000;
+  lastTs = ts;
+  if (dt > 0.1) dt = 0.016;
+  dt = Math.min(dt, 0.05);
+
+  updatePlayer(dt);
+
+  if (map.length > 0) {
+    const rays = castRays();
+    const bobY = Math.sin(player.bob) * 1.2 * (player.bob !== 0 ? 1 : 0);
+    ctx.save();
+    if (bobY !== 0) ctx.translate(0, bobY);
+    render(rays);
+    ctx.restore();
+  }
+
+  updateTimeHUD();
+  requestAnimationFrame(loop);
+}
+
+/* =========================================================
+   启动
+   ========================================================= */
+resizeCanvas();
+showMenu();
+requestAnimationFrame(loop);
+
+})();
+</script>
+</body>
+</html>
